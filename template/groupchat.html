@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="UTF-8">
+   <title>Chat Game</title>
+
+   <link rel="stylesheet" href="../static/css/normalize.css">
+   <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+   <div class="ui" style="width:1000px;background-color: #a9b1bc">
+      <!--<div class="dropdown">
+				<button class="dropbtn">Dropdown</button>
+				<div class="dropdown-content">
+			    	<a href="home">Home</a>
+			    	<a href="groups">Groups</a>
+			    	<a href="people">People</a>
+			  	</div>
+			</div>-->
+      <menu class="list-pages" style="color: black; width: 30%;">
+         <li>
+            <img width="30" height="30" src="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg">
+            <div class="info">
+               <div class="user status on" style="font-size: 15px; color: black;margin-bottom: 15px;">Sara Taha</div>
+               <!-- Rounded switch -->
+               <label class="switch">
+                  <input type="checkbox">
+                  <div class="slider round"></div>
+               </label>
+               <p>Offline/Online</p>
+            </div>
+         </li>
+         <li class="button" style="width: 55%;margin-left: 1.5em">
+            <a href="home"><img width="50" height="50" src="../static/img/home.png">
+            </a>
+         </li>
+         <li class="button" style="width: 55%;margin-left: 1.5em">
+            <a href="groups"><img width="50" height="50" src="../static/img/group.png">
+            </a>
+         </li>
+         <li class="button" style="width: 55%;margin-left: 1.5em">
+            <a href="people"><img width="50" height="50" src="../static/img/user.png">
+            </a>
+         </li>
+      </menu>
+      <div class="left-menu">
+
+         <menu class="list-pages" style="font-size: 15px;">
+            <li>
+               <img width="50" height="50" src="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg">
+               <div class="info">
+                  <div class="user">Sara Taha</div>
+                  <div class="status on"> online</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/1">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status on"> online</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/2">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status off">left 3 min age</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/3">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status on"> online</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/4">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status off">left 4 min age</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/5">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status off">left 12 min age</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/6">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status off">left 13 min age</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/7">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status on">online</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/8">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status off">left 6 min age</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/9">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status on">online</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/10">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status off">left 1 min age</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/0">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status on">online</div>
+               </div>
+            </li>
+            <li>
+               <img width="50" height="50" src="http://lorempixel.com/50/50/people/99">
+               <div class="info">
+                  <div class="user">Name</div>
+                  <div class="status off">left 23 min age</div>
+               </div>
+            </li>
+         </menu>
+      </div>
+      <div class="chat">
+         <div class="top">
+            <div class="avatar">
+               <!--<img width="50" height="50" src="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg">-->
+               <img width="50" height="50" src="{{ group_avatar }}">
+            </div>
+            <div class="info">
+               <div class="name" id="gr-username">{{ group_name }}</div>
+               <div class="count">already {{ posts_no }} messages</div>
+            </div>
+            <i class="fa fa-star"></i>
+         </div>
+         <ul class="messages">
+         {% for month in filename %}
+            {% for user in chat_members %}
+               {% if month[0:month.index("#")] == username %}
+                  <li class="i">
+                     <div class="head">
+                        <span class="time">10:13 AM, Today</span>
+                        <span class="name">Me</span>
+                     </div>
+                     <div class="message"> {{ month[month.index("#")+1:] }}</div>
+                  </li>
+            {% elif month[0:month.index("#")] == user %}
+               <li class="friend">
+                  <div class="head">
+                     <span class="name">{{ user }}</span>
+                     <span class="time">10:15 AM, Today</span>
+                  </div>
+                  <div class="message">{{ month[month.index("#")+1:] }}</div>
+               </li>
+               {% end %}
+            {% end %}
+        {% end %}
+         </ul>
+         <div class="write-form">
+            <textarea placeholder="Type your message" name="e" id="text" rows="2"></textarea>
+            <i class="fa fa-picture-o"></i>
+            <i class="fa fa-file-o"></i>
+            <span class="send">Send</span>
+         </div>
+      </div>
+   </div>
+   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+   <script src='http://cdnjs.cloudflare.com/ajax/libs/nicescroll/3.5.4/jquery.nicescroll.js'></script>
+   <script src="../static/js/index.js"></script>
+</body>
+</html>

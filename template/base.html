@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %} Main {% end %}</title>
+	<link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+	
+	{% block script %} {% end %}
+</head>
+<body>
+   <div class="ui" style="width:1000px">
+      <div class="left-menu">
+         <menu class="list-pages">
+            <li>
+               <img width="50" height="50" src="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg">
+               <div class="info">
+
+                  <div class="user status {{status}}" style="font-size: 20px; color: white;margin-bottom: 15px;">{{user_name}}</div>
+                  <!-- Rounded switch -->
+                  <label class="switch">
+                     <input type="checkbox">
+                     <div class="slider round"></div>
+                  </label>
+                  <p style="color: white;text-align: left;margin-right: 10px;font-size: 10px;">Offline/Online</p>
+               </div>
+            </li>
+            <li class="button">
+               <img width="50" height="50" src="../static/img/home.png">
+               <div class="info">
+                  <div class="user"><a href="home">Home</a>
+                  </div>
+               </div>
+            </li>
+            <li class="button">
+               <img width="50" height="50" src="../static/img/group.png">
+               <div class="info">
+                  <div class="user"><a href="groups">Groups</a>
+                  </div>
+               </div>
+            </li>
+            <li class="button">
+               <img width="50" height="50" src="../static/img/user.png">
+               <!--<img width="50" height="50" src="https://cdn0.iconfinder.com/data/icons/social-messaging-ui-color-shapes/128/chat-circle-blue-512.png">-->
+               <div class="info">
+                  <div class="user"><a href="people">People</a>
+                  </div>
+               </div>
+            </li>
+         </menu>
+      </div>
+	{% block content %} {% end %}
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+   	<script src='http://cdnjs.cloudflare.com/ajax/libs/nicescroll/3.5.4/jquery.nicescroll.js'></script>
+	<script src="../static/js/index.js"></script>
+</body>
+</html>
