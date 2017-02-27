@@ -1,15 +1,14 @@
 from tornado import gen,web
 import json,os,time
 import pymongo
+from pprint import pprint
 
 templateurl = "../template/"
 
 class BaseHandler(web.RequestHandler):
 	def get_current_user(self):
 		user_id = self.get_secure_cookie("id")
-		#if user_id == 'None' or not user_id: return None
 		if not user_id: return None
-		#else:
 		user_name = str(self.get_secure_cookie("name"),'utf-8')
 		user_status = str(self.get_secure_cookie("status"),'utf-8')
 		user = {
@@ -37,6 +36,7 @@ class PrivateChatHandler(BaseHandler):
 		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name="2", posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 class GroupChatHandler(BaseHandler):
+	@web.authenticated
 	def get(self):
 		f = open("template/test.txt")
 		# count = 0
@@ -56,24 +56,23 @@ class HomeHandler(BaseHandler):
 		self.render(templateurl+"home.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 #handling signup in db and cookies (registeration and login)
 class SignupHandler(BaseHandler):		
-	#@web.authenticated	
+	#@web.authenticated
 	def post(self):
+		#insert user info
 		db = self.application.database
 		username=self.get_argument("signupname")
 		email=self.get_argument("signupemail")
 		pwd=self.get_argument("signuppwd")
-		new_user = {"name":username,"password":pwd,"email":email}
+		new_user = {"name":username,"password":pwd,"email":email,"status":'on'}
 		try:
-		 	user_id = db.users.insert(new_user)
+			user_id = db.users.insert(new_user)
+			self.set_secure_cookie("id",str(user_id))
+			self.set_secure_cookie("name", username)
+			self.set_secure_cookie("status", 'on')
+			self.render(templateurl+"home.html", user_name=username, status='on', group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")	
 		except pymongo.errors.DuplicateKeyError:
-			#error=True
-		 	self.write("Duplicate name <br/>")
-		 	self.redirect("/")
-		self.set_secure_cookie("id",str(user_id))
-		self.set_secure_cookie("name", username)
-		self.set_secure_cookie("status", 'on')	
-
-		self.render(templateurl+"home.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+			# error in signup if duplicated name
+			self.redirect("/?sp=1")		
 
 
 class GroupsHandler(BaseHandler):

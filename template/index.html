@@ -40,7 +40,11 @@
               <input type="text"required autocomplete="off"/>
             </div>
           </div> -->
-
+          {% if sp_error %}
+               <div class="error">
+               <p> user name already in use</p>
+               </div>
+            {% end %}
           <div class="field-wrap">
             <label>
               Username<span class="req">*</span>
