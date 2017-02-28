@@ -1,6 +1,6 @@
 from tornado import web,ioloop,httpserver,options
 from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler,GroupChatHandler, HomeHandler, GroupsHandler, PeopleHandler,AddFriendHandler
-#from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler, GroupChatHandler, HomeHandler, GroupsHandler, PeopleHandler, BlockHandler
+#from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler, GroupChatHandler, HomeHandler, GroupsHandler, PeopleHan,ler, BlockHandler
 from handlers.ajax import *
 from pymongo import MongoClient
 from pprint import pprint
@@ -21,10 +21,12 @@ class Application(web.Application):
 			(r"/groups",GroupsHandler),
 			(r"/people",PeopleHandler),
 			#editing people friend requist
-			(r"/addfriend",AddFriendHandler)
-			(r"/blockfriend",BlockHandler)
+			(r"/addfriend",AddFriendHandler),
+			(r"/blockfriend",BlockHandler),
+			#create group
+			(r"/createGroup",CreateGroupHandler)
 
-		]
+					]
 		settings = dict(
 			autoescape=None,
 			autoreload=True,

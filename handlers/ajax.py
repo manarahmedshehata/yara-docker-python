@@ -6,7 +6,7 @@ from bson.objectid import ObjectId #deal with object pymongo
 from bson.code import Code
 from bson import ObjectId
 
->>>>>>> 4c429e5cb6dee976eb219d3b69a3e968c4bd328d
+
 templateurl = "../template/"
 
 class BaseHandler(web.RequestHandler):
@@ -131,4 +131,13 @@ class BlockHandler(BaseHandler):
 		#__TODO__Exceptions handling
 		update=db.users.update_one({"_id":uid},{"$pull":{block:removeid}})
 		pprint(update.modified_count)
-
+#########################################################################################3
+#creating handler for create group
+# don't work 
+class CreateGroupHandler(BaseHandler):
+	@web.authenticated
+	def get(self):
+		userId = str(self.get_secure_cookie("id"),'utf-8')
+		groupNameCreate=self.get_argument("gx")
+		print(gx)
+		#db = self.application.database
