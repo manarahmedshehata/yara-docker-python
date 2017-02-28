@@ -1,8 +1,9 @@
 from tornado import web,ioloop,httpserver,options
-from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler, GroupChatHandler, HomeHandler, GroupsHandler, PeopleHandler
+from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler,GroupChatHandler, HomeHandler, GroupsHandler, PeopleHandler,AddFriendHandler
 from pymongo import MongoClient
 from pprint import pprint
 from tornado.options import define, options
+from bson.code import Code
 
 define("port", default=7070, help="run on the given port", type=int)
 
@@ -16,7 +17,9 @@ class Application(web.Application):
 			(r"/gchat",GroupChatHandler),
 			(r"/home",HomeHandler),
 			(r"/groups",GroupsHandler),
-			(r"/people",PeopleHandler)
+			(r"/people",PeopleHandler),
+			#editing people friend requist
+			(r"/addfriend",AddFriendHandler)
 		]
 		settings = dict(
 			autoescape=None,
@@ -48,7 +51,7 @@ class MainHandler(BaseHandler):
 		if not self.current_user:
 			self.render("template/index.html",class_tag1=self.cls1,class_tag2=self.cls2, error=False, signup_display=self.signup_disp, login_display=self.login_disp,sp_error=False)
 		else:
-			self.redirect("/home")  
+			self.redirect("/home")
 	def post(self):
 		db = self.application.database
 		username=self.get_argument("username")
@@ -63,13 +66,13 @@ class MainHandler(BaseHandler):
 			self.login_disp = "display:block;"
 			self.render("template/index.html",class_tag1=self.cls1,class_tag2=self.cls2, error=True, signup_display=self.signup_disp, login_display=self.login_disp,sp_error=False)
 		else:
-			#LOGIN 
+			#LOGIN
 			#Add username to cookies
 			#redirect to home page and start session
 			for c in users:
 				self.set_secure_cookie("id",str(c['_id']))
 				self.set_secure_cookie("name", c['name'])
-				#self.set_secure_cookie("status", c['status'])	
+				#self.set_secure_cookie("status", c['status'])
 				self.set_secure_cookie("status", 'off')
 			self.redirect("/home")
 """
