@@ -4,6 +4,9 @@ import pymongo
 from pprint import pprint
 from bson.objectid import ObjectId #deal with object pymongo
 from bson.code import Code
+from bson import ObjectId
+
+>>>>>>> 4c429e5cb6dee976eb219d3b69a3e968c4bd328d
 templateurl = "../template/"
 
 class BaseHandler(web.RequestHandler):
@@ -109,3 +112,23 @@ class AddFriendHandler(BaseHandler):
 		#	print(x)
 		# but the above code will allow dublicated
 		#we need to verify if it's exist before or not may be try to remove it if it's exist before
+class BlockHandler(BaseHandler):
+	@web.authenticated
+	def get(self):
+		#__TODO__ put function body @POST method and handel fun return
+		#frindblock boolean if true operation is blocking friend else Group remove
+		frindblock=self.get_argument("block")
+		db = self.application.database
+		#__TODO__ get removeid from interface
+		#removeid=ObjectId("58b5ca548d46858f7030f216")#user
+		removeid=ObjectId("58b5c9b68d46858f7030f215")#group
+		uid=ObjectId(self.current_user['user'])
+		print(frindblock)
+		if frindblock== "true":
+			block = "friends"
+		elif frindblock== "false":
+			block = "groups_id"
+		#__TODO__Exceptions handling
+		update=db.users.update_one({"_id":uid},{"$pull":{block:removeid}})
+		pprint(update.modified_count)
+
