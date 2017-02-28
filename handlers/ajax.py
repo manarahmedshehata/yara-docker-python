@@ -2,6 +2,7 @@ from tornado import gen,web
 import json,os,time
 import pymongo
 from pprint import pprint
+from bson import ObjectId
 
 templateurl = "../template/"
 
@@ -84,3 +85,22 @@ class PeopleHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+class BlockHandler(BaseHandler):
+	@web.authenticated
+	def get(self):
+		#__TODO__ put function body @POST method and handel fun return
+		#frindblock boolean if true operation is blocking friend else Group remove
+		frindblock=self.get_argument("block")
+		db = self.application.database
+		#__TODO__ get removeid from interface
+		#removeid=ObjectId("58b5ca548d46858f7030f216")#user
+		removeid=ObjectId("58b5c9b68d46858f7030f215")#group
+		uid=ObjectId(self.current_user['user'])
+		print(frindblock)
+		if frindblock== "true":
+			block = "friends"
+		elif frindblock== "false":
+			block = "groups_id"
+		#__TODO__Exceptions handling
+		update=db.users.update_one({"_id":uid},{"$pull":{block:removeid}})
+		pprint(update.modified_count)
