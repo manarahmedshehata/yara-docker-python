@@ -119,6 +119,7 @@ class CreateGroupHandler(BaseHandler):
 		print(groupname)
 		try:
 			group_id = db.groups.insert({name:groupname})
+			self.render(templateurl+"groups.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 		except pymongo.errors.DuplicateKeyError:
 			self.write("Group name already in use")
 			self.redirect("/addgroup")
