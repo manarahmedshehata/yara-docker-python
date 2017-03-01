@@ -24,19 +24,14 @@ class Application(web.Application):
 			(r"/home",HomeHandler),
 			(r"/groups",GroupsHandler),
 			(r"/people",PeopleHandler),
-<<<<<<< HEAD
 			(r"/addgroup",CreateGroupHandler),
 			# (r"/chatbot",ChatBotHandler)
-		]
-=======
 			#editing people friend requist
 			(r"/addfriend",AddFriendHandler),
 			(r"/blockfriend",BlockHandler),
 			#create group
 			(r"/createGroup",CreateGroupHandler)
-
-					]
->>>>>>> 5a2085116ac6b622b78d0d30d9b69eba0064f343
+			]
 		settings = dict(
 			autoescape=None,
 			autoreload=True,
@@ -84,14 +79,10 @@ class MainHandler(BaseHandler):
 				self.set_secure_cookie("id",str(c['_id']))
 				self.set_secure_cookie("name", c['name'])
 				#self.set_secure_cookie("status", c['status'])
-				self.set_secure_cookie("status", 'off')
+				self.set_secure_cookie("status", 'on')
 			self.redirect("/home")
-<<<<<<< HEAD
 			#self.render("template/home.html")
 			#self.render("template/index.html",class_tag1=cls1,class_tag2=cls2, label_message=label_msg, signup_display=signup_disp, login_display=login_disp)
-
-=======
->>>>>>> 5a2085116ac6b622b78d0d30d9b69eba0064f343
 """
 @ Main Function
 """
