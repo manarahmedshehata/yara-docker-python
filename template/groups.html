@@ -13,6 +13,21 @@
          </ul>
          <h2>All Groups</h2>
          <ul class="allgroups"></ul>
+         <div id="createGroup"  style="display:none;" class="answer" > <p>Group Name :<input type="text" id="gName"></p> </div>
+         <input type="button" name="answer" id="btnCreate" value="Create Group" onclick="showDiv()" />
       </div>
    </div>
+   <script>
+   function showDiv() {
+   document.getElementById('createGroup').style.display = "block";
+  var btn = document.getElementById('btnCreate');
+  if ( btn.value == "Create Group") btn.value ="Create";
+  else {btn.value = "Create Group";document.getElementById('createGroup').style.display = "none";}
+  if ( document.getElementById("gName").value !="") {
+    var gx = document.getElementById("gName").value ;
+  }
+
+  console.log(gx);
+}
+</script>
 {% end %}
