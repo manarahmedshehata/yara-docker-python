@@ -1,11 +1,8 @@
 from tornado import web,ioloop,httpserver,options
-<<<<<<< HEAD
 from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler, GroupChatHandler, HomeHandler, GroupsHandler, PeopleHandler, CreateGroupHandler
-=======
 from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler,GroupChatHandler, HomeHandler, GroupsHandler, PeopleHandler,AddFriendHandler
 #from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler, GroupChatHandler, HomeHandler, GroupsHandler, PeopleHan,ler, BlockHandler
 from handlers.ajax import *
->>>>>>> 5a2085116ac6b622b78d0d30d9b69eba0064f343
 from pymongo import MongoClient
 from pprint import pprint
 from tornado.options import define, options
