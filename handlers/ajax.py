@@ -43,7 +43,7 @@ class GroupChatHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
 		f = open("template/test.txt")
-		
+
 		count = 0
 
 		for line in f:
@@ -110,7 +110,7 @@ class PeopleHandler(BaseHandler):
 
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], friends_list=frnds_list, status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
-# Handler to Create Group 
+# Handler to Create Group
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
@@ -130,7 +130,7 @@ class CreateGroupHandler(BaseHandler):
 # 	@web.authenticated
 # 	def get(self):
 # 		f = open("template/test.txt")
-		
+
 # 		count = 0
 
 # 		for line in f:
@@ -186,11 +186,16 @@ class BlockHandler(BaseHandler):
 		pprint(update.modified_count)
 #########################################################################################3
 #creating handler for create group
-# don't work 
+# don't work
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
 		userId = str(self.get_secure_cookie("id"),'utf-8')
 		groupNameCreate=self.get_argument("gx")
 		print(gx)
-		#db = self.application.database
+		#db = self.application.databas
+##########################################
+class LogoutHandler(BaseHandler):
+    def get(self):
+        self.clear_cookie(self.current_user['user'])
+        self.redirect("/")
