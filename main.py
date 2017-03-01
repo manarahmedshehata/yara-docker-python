@@ -34,11 +34,6 @@ class Application(web.Application):
 		print(self.con)
 		self.database = self.con["Chat"]
 
-# class BaseHandler(tornado.web.RequestHandler):
-#     def get_current_user(self):
-
-#         return self.get_secure_cookie("user")
-
 class MainHandler(BaseHandler):
 	cls1 = "active"
 	cls2 = ""
