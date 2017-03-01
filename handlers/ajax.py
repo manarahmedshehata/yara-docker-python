@@ -110,6 +110,7 @@ class PeopleHandler(BaseHandler):
 
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], friends_list=frnds_list, status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
+# Handler to Create Group 
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
@@ -138,6 +139,7 @@ class CreateGroupHandler(BaseHandler):
 
 # 		self.render(templateurl+"chatbot.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name="2", posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+
 #class to add friend
 class AddFriendHandler(BaseHandler):
 	@web.authenticated
