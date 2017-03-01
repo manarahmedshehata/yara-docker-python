@@ -1,5 +1,5 @@
 from tornado import web,ioloop,httpserver,options
-from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler, GroupChatHandler, HomeHandler, GroupsHandler, PeopleHandler
+from handlers.ajax import BaseHandler, SignupHandler, PrivateChatHandler, GroupChatHandler, HomeHandler, GroupsHandler, PeopleHandler, CreateGroupHandler
 from pymongo import MongoClient
 from pprint import pprint
 from tornado.options import define, options
@@ -16,7 +16,9 @@ class Application(web.Application):
 			(r"/gchat",GroupChatHandler),
 			(r"/home",HomeHandler),
 			(r"/groups",GroupsHandler),
-			(r"/people",PeopleHandler)
+			(r"/people",PeopleHandler),
+			(r"/addgroup",CreateGroupHandler),
+			# (r"/chatbot",ChatBotHandler)
 		]
 		settings = dict(
 			autoescape=None,
@@ -87,6 +89,7 @@ class MainHandler(BaseHandler):
 			self.redirect("/home")
 			#self.render("template/home.html")
 			#self.render("template/index.html",class_tag1=cls1,class_tag2=cls2, label_message=label_msg, signup_display=signup_disp, login_display=login_disp)
+
 """
 @ Main Function
 """

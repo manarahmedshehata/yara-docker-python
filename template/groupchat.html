@@ -44,6 +44,9 @@
             <a href="people"><img width="50" height="50" src="../static/img/user.png">
             </a>
          </li>
+         <li class="button" style="width: 55%;margin-left: 2.5em;text-align: center;font-size: 0.6em;">
+            <a href="chatbot" style="text-align: center;">ChatBot</a>
+         </li>
       </menu>
       <div class="left-menu">
 
@@ -154,23 +157,23 @@
             <i class="fa fa-star"></i>
          </div>
          <ul class="messages">
-         {% for month in filename %}
+         {% for msg in filename %}
             {% for user in chat_members %}
-               {% if month[0:month.index("#")] == username %}
+               {% if msg[0:msg.index("#")] == username %}
                   <li class="i">
                      <div class="head">
                         <span class="time">10:13 AM, Today</span>
                         <span class="name">Me</span>
                      </div>
-                     <div class="message"> {{ month[month.index("#")+1:] }}</div>
+                     <div class="message"> {{ msg[msg.index("#")+1:] }}</div>
                   </li>
-            {% elif month[0:month.index("#")] == user %}
+            {% elif msg[0:msg.index("#")] == user %}
                <li class="friend">
                   <div class="head">
                      <span class="name">{{ user }}</span>
                      <span class="time">10:15 AM, Today</span>
                   </div>
-                  <div class="message">{{ month[month.index("#")+1:] }}</div>
+                  <div class="message">{{ msg[msg.index("#")+1:] }}</div>
                </li>
                {% end %}
             {% end %}
