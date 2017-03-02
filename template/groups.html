@@ -8,13 +8,38 @@
                <div class="name" style="margin-left: 160px;font-size: 50px; text-decoration: underline;">Groups</div>
             </div>
          </div>
+         <div>
          <h2>Groups you're member of</h2>
          <ul class="memberof" style="height: 35%">
+         {% for i,group in enumerate(groups_list) %}
+              <li> 
+                  <a class ="groups" href="/gchat" id={{group['_id'] }}> {{group['name'] }}</a></li>
+                   <form action="/blockfriend" method="post">
+                      <input type="hidden" name="block" value="group">
+                      <input type="hidden" name="remove" value={{group['_id']}}>
+                      <button type="submit" />leave group</button>
+                   </form>
+           {% end %}
          </ul>
          <h2>All Groups</h2>
-         <ul class="allgroups"></ul>
+         <ul class="allgroups">
+            {% for i,groupnin in enumerate(nin_grouplist) %}
+              <li> 
+                  <!-- <a class ="groups" href="/gchat" id={{groupnin["_id"] }}> {{groupnin['name'] }}</a> -->
+                  <p>{{groupnin['name'] }}</p>
+                    <form action="/add" method="post">
+                    <input type="hidden" name="add" value="group">
+                      <input type="hidden" name="join" value={{groupnin['_id']}}>
+                      <button type="submit" />Join group</button>
+                    </form>
+
+              </li>
+           {% end %}
+           
+         </ul>
          <div id="createGroup"  style="display:none;" class="answer" > <p>Group Name :<input type="text" id="gName"></p> </div>
          <input type="button" name="answer" id="btnCreate" value="Create Group" onclick="showDiv()" />
+      </div>
       </div>
    </div>
    <script>

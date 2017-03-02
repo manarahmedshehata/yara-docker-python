@@ -3,6 +3,10 @@
 {% extends base.html %}
    {% block title %} Chat Game | Groups {% end %}
 {% block content %}
+
+
+
+
       <div class="chat">
          <div class="top">
             <div class="info">
@@ -11,10 +15,12 @@
          </div>
          <h2>Your Friends</h2>
          <ul class="memberof" style="height: 35%">
-         {{ friends_list }}
+         
+         
          </ul>
          <h2>All People</h2>
          <ul class="allgroups"></ul>
+         <div><a href="/pchat" id="Sara" name="friend_name">friend</a></div>
       </div>
    </div>
 {% end %}
