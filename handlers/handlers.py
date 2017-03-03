@@ -100,7 +100,7 @@ class GroupsHandler(BaseHandler):
 		groups=db.users.find({'name':user_id},{'groups_id':1,'_id':0})
 		for g in groups:
 			for group in g["groups_id"]:
-				name=db.groups.find({'_id':group},{'name':1})	
+				name=db.groups.find({'_id':group},{'name':1})
 				for n in name:
 					groupslist_in.append(n)
 			notin_name=db.groups.find({'_id':{'$nin':g["groups_id"]}},{'name':1})
@@ -113,25 +113,24 @@ class GroupsHandler(BaseHandler):
 class PeopleHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
-
-		# db = self.application.database
-		# userName = self.current_user
-		
-		# frnds_list = db.users.find({name:userName},{friendId:1})
-		# print(userName)
-		#find friends
-		# #frnds_list = db.users.find({name:userName},{friendId:1}).forEach(function(frind){=db.users.find({_id:{$in:frind.friendId}}).forEach(function(u){print(u.name)})})
-		# print(db.users.find({"name":userName},{"name":1}))
-		# print(frnds_list)
-		# for i in frnds_list.length:
-		# 	print(frnds_list[i])
-
-		# others_list = db.users.find({name:{$ne:userName}},{friendId:1}).forEach(function(frnd){db.users.find({$and[{_id:frnd},{name:{$ne:userName}}]},{"name":1})})
-
-		# self.render(templateurl+"people.html", user_name=self.current_user['name'], friends_list=frnds_list, status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
-
-		 self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
-
+		db = self.application.database
+		userName =self.current_user['name']
+		print(userName)
+		friends_list_in=[]
+		friends_list_notin=[]
+		db = self.application.database
+		user_id =self.current_user['name']
+		#pprint(type(user_id))
+		friends=db.users.find({'name':user_id},{'friendId':1,'_id':0})
+		for f in friends:
+			for friend in f["friendId"]:
+				name=db.users.find({'_id':friend},{'name':1})
+				for n in name:
+					friends_list_in.append(n)
+			notin_name=db.users.find({'_id':{'$nin':f["friendId"]}},{'name':1})
+			for nin in notin_name:
+				friends_list_notin.append(nin)
+		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], friend_nin_list=friends_list_notin,friend_in_list=friends_list_in, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 # Handler to Create Group
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
@@ -212,7 +211,7 @@ class AddingHandler(BaseHandler):
 			self.redirect("/people")
 		elif fgadd== "group":
 			self.redirect("/groups")
-		
+
 class BlockHandler(BaseHandler):
 	@web.authenticated
 	def post(self):
@@ -237,7 +236,7 @@ class BlockHandler(BaseHandler):
 			self.redirect("/people")
 		elif fgblock== "group":
 			self.redirect("/groups")
-		
+
 		pprint(update.modified_count)
 #########################################################################################3
 """
@@ -256,7 +255,7 @@ class CreateGroupHandler(BaseHandler):
 clients = []
 class WSHandler(websocket.WebSocketHandler,BaseHandler):
 	pass
-"""	
+"""
 	pprint(clients)
 	print("ws")
 	#@web.authenticated
