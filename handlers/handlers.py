@@ -1,4 +1,5 @@
 from tornado import gen,web
+from tornado import websocket
 import json,os,time
 import pymongo
 from pprint import pprint
@@ -28,10 +29,15 @@ class BaseHandler(web.RequestHandler):
 class PrivateChatHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
+		print("pchat")
+		pprint(self.current_user)
 		count = 0
 
 		f = open("template/test.txt")
-
+		"""
+		for msg in f:
+			if if msg[0:msg.index("#")] == username
+		"""
 		for line in f:
 			count = count + 1
 
@@ -43,7 +49,7 @@ class GroupChatHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
 		f = open("template/test.txt")
-		
+
 		count = 0
 
 		for line in f:
@@ -86,21 +92,44 @@ class SignupHandler(BaseHandler):
 class GroupsHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
-
+		groupslist_in=[]
+		groupslist_notin=[]
+		db = self.application.database
+		user_id =self.current_user['name']
+		#pprint(type(user_id))
+		groups=db.users.find({'name':user_id},{'groups_id':1,'_id':0})
+		for g in groups:
+			for group in g["groups_id"]:
+				name=db.groups.find({'_id':group},{'name':1})	
+				for n in name:
+					groupslist_in.append(n)
+			notin_name=db.groups.find({'_id':{'$nin':g["groups_id"]}},{'name':1})
+			for nin in notin_name:
+				groupslist_notin.append(nin)
 		# db.users.find({name:userName}).forEach(function(user){ db.groups.find({user:user._id}).forEach(function(group) { print(group.name) }) })
 
-		self.render(templateurl+"groups.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		self.render(templateurl+"groups.html", user_name=self.current_user['name'], status=self.current_user['status'], groups_list=groupslist_in,nin_grouplist=groupslist_notin, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 class PeopleHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
+<<<<<<< HEAD:handlers/ajax.py
 		db = self.application.database
 		userName = self.get_secure_cookie("name")
 		print(userName)
 		frnds_list = db.users.find({"name":userName},{"friendId":1})
 		# find friends
 		# frnds_list = db.users.find({name:userName},{friendId:1}).forEach(function(frind){=db.users.find({_id:{$in:frind.friendId}}).forEach(function(u){print(u.name)})})
+=======
+>>>>>>> a7cee8859cd4397dafe2339ad9ec899b2e5bd3e3:handlers/handlers.py
 
+		# db = self.application.database
+		# userName = self.current_user
+		
+		# frnds_list = db.users.find({name:userName},{friendId:1})
+		# print(userName)
+		#find friends
+		# #frnds_list = db.users.find({name:userName},{friendId:1}).forEach(function(frind){=db.users.find({_id:{$in:frind.friendId}}).forEach(function(u){print(u.name)})})
 		# print(db.users.find({"name":userName},{"name":1}))
 		# print(frnds_list)
 		# for i in frnds_list.length:
@@ -108,9 +137,11 @@ class PeopleHandler(BaseHandler):
 
 		# others_list = db.users.find({name:{$ne:userName}},{friendId:1}).forEach(function(frnd){db.users.find({$and[{_id:frnd},{name:{$ne:userName}}]},{"name":1})})
 
-		self.render(templateurl+"people.html", user_name=self.current_user['name'], friends_list=frnds_list, status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		# self.render(templateurl+"people.html", user_name=self.current_user['name'], friends_list=frnds_list, status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
-# Handler to Create Group 
+		 self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+
+# Handler to Create Group
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
@@ -119,7 +150,8 @@ class CreateGroupHandler(BaseHandler):
 		groupname = self.get_query_arguments("groupname")
 		print(groupname)
 		try:
-			group_id = db.groups.insert({name:groupname})
+			group_id = db.groups.insert({'name':groupname})
+			#__TODO Add group id to user
 			self.render(templateurl+"groups.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 		except pymongo.errors.DuplicateKeyError:
 			self.write("Group name already in use")
@@ -131,7 +163,7 @@ class CreateGroupHandler(BaseHandler):
 # 	@web.authenticated
 # 	def get(self):
 # 		f = open("template/test.txt")
-		
+
 # 		count = 0
 
 # 		for line in f:
@@ -141,18 +173,19 @@ class CreateGroupHandler(BaseHandler):
 
 # 		self.render(templateurl+"chatbot.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name="2", posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
-
+"""
 #class to add friend
 class AddFriendHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
-		#userId=self.get_secure_cookie("id")
-		userId = str(self.get_secure_cookie("id"),'utf-8')
+		userId = ObjectId(self.current_user['user'])
+		# str(self.get_secure_cookie("id"),'utf-8')
 		#print(userId)
 		#open connection with database
 		db = self.application.database
 		# iterate in users to find matched one
-		for users in db.users.find({"_id":ObjectId(userId)}):
+		userss=db.users.find({"_id":ObjectId(userId)})
+		for users in userss:
 			print(users)
 		#static adding friend in dbs using id of another one then trying to do it auto
 		#adding only id of friends
@@ -162,32 +195,64 @@ class AddFriendHandler(BaseHandler):
 		# else:
 		db.users.update({"_id":ObjectId(userId)},{"$push":{"friendId":reqId}})
 
-		# x []= Code("""db.users.find({'_id':ObjectId(userId)},{"friendId":1,"_id":0}).forEach(function(frind){test=db.users.find({reqId:{'$in':'frind.friendId'}}).forEach(function(u){print(u.name)})})""")
+		# x []= Code(db.users.find({'_id':ObjectId(userId)},{"friendId":1,"_id":0}).forEach(function(frind){test=db.users.find({reqId:{'$in':'frind.friendId'}}).forEach(function(u){print(u.name)})}))
 		#	print(x)
 		# but the above code will allow dublicated
 		#we need to verify if it's exist before or not may be try to remove it if it's exist before
+"""
+class AddingHandler(BaseHandler):
+	@web.authenticated
+	def post(self):
+		uid = ObjectId(self.current_user['user'])
+		fgadd=self.get_argument("add")
+		addid=ObjectId(self.get_argument("join"))
+		#open connection with database
+		db = self.application.database
+		if fgadd== "friend":
+			add = "friendId"
+		elif fgadd== "group":
+			add = "groups_id"
+		#__TODO__Exceptions handling
+		print("adding")
+		print(fgadd)
+		print(addid)
+		# 	print("duplicates")
+		db.users.update({"_id":uid},{"$push":{add:addid}})
+		if fgadd== "friend":
+			self.redirect("/people")
+		elif fgadd== "group":
+			self.redirect("/groups")
+		
 class BlockHandler(BaseHandler):
 	@web.authenticated
-	def get(self):
-		#__TODO__ put function body @POST method and handel fun return
-		#frindblock boolean if true operation is blocking friend else Group remove
-		frindblock=self.get_argument("block")
+	def post(self):
+		#__TODO__ handel fun return
+		#fgblock string string refering to block friend or Group
+		fgblock=self.get_argument("block")
+		removeid=ObjectId(self.get_argument("remove"))
 		db = self.application.database
 		#__TODO__ get removeid from interface
 		#removeid=ObjectId("58b5ca548d46858f7030f216")#user
-		removeid=ObjectId("58b5c9b68d46858f7030f215")#group
+		#removeid=ObjectId("58b5c9b68d46858f7030f215")#group
 		uid=ObjectId(self.current_user['user'])
-		print(frindblock)
-		if frindblock== "true":
-			block = "friends"
-		elif frindblock== "false":
+		print(fgblock)
+		print(removeid)
+		if fgblock== "friend":
+			block = "friendId"
+		elif fgblock== "group":
 			block = "groups_id"
 		#__TODO__Exceptions handling
 		update=db.users.update_one({"_id":uid},{"$pull":{block:removeid}})
+		if fgblock== "friend":
+			self.redirect("/people")
+		elif fgblock== "group":
+			self.redirect("/groups")
+		
 		pprint(update.modified_count)
 #########################################################################################3
+"""
 #creating handler for create group
-# don't work 
+# don't work
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
@@ -195,3 +260,31 @@ class CreateGroupHandler(BaseHandler):
 		groupNameCreate=self.get_argument("gx")
 		print(gx)
 		#db = self.application.database
+"""
+
+#handling websocket
+clients = []
+class WSHandler(websocket.WebSocketHandler,BaseHandler):
+	pass
+"""	
+	pprint(clients)
+	print("ws")
+	#@web.authenticated
+	def open(self):
+		# print(self.current_user)
+		if self.current_user:
+			print("ws")
+			client={'id':self.current_user['user'],'info':self,'name':self.current_user['name']}
+			pprint(client)
+			clients.append(client)
+	def on_message(self,message):
+		pprint(clients)
+		msg=json.loads(message)
+		pprint(msg)
+"""
+		#db = self.application.databas
+##########################################
+class LogoutHandler(BaseHandler):
+    def get(self):
+        self.clear_cookie(self.current_user['user'])
+        self.redirect("/")
