@@ -97,14 +97,14 @@ class PeopleHandler(BaseHandler):
 		db = self.application.database
 		userName = self.get_secure_cookie("name")
 		print(userName)
-		# frnds_list = db.users.find({name:userName},{friendId:1})
+		frnds_list = db.users.find({"name":userName},{"friendId":1})
 		# find friends
 		# frnds_list = db.users.find({name:userName},{friendId:1}).forEach(function(frind){=db.users.find({_id:{$in:frind.friendId}}).forEach(function(u){print(u.name)})})
 
 		# print(db.users.find({"name":userName},{"name":1}))
 		# print(frnds_list)
-		for i in frnds_list.length:
-			print(frnds_list[i])
+		# for i in frnds_list.length:
+		# 	print(frnds_list[i])
 
 		# others_list = db.users.find({name:{$ne:userName}},{friendId:1}).forEach(function(frnd){db.users.find({$and[{_id:frnd},{name:{$ne:userName}}]},{"name":1})})
 
@@ -114,6 +114,7 @@ class PeopleHandler(BaseHandler):
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
+		userID = str(self.get_secure_cookie("id"),'utf-8')
 		db = self.application.database
 		groupname = self.get_query_arguments("groupname")
 		print(groupname)

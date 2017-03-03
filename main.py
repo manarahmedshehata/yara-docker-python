@@ -44,11 +44,6 @@ class Application(web.Application):
 		print(self.con)
 		self.database = self.con["Chat"]
 
-# class BaseHandler(tornado.web.RequestHandler):
-#     def get_current_user(self):
-
-#         return self.get_secure_cookie("user")
-
 class MainHandler(BaseHandler):
 	cls1 = "active"
 	cls2 = ""
@@ -82,7 +77,7 @@ class MainHandler(BaseHandler):
 				self.set_secure_cookie("id",str(c['_id']))
 				self.set_secure_cookie("name", c['name'])
 				#self.set_secure_cookie("status", c['status'])
-				self.set_secure_cookie("status", 'off')
+				self.set_secure_cookie("status", 'on')
 			self.redirect("/home")
 			#self.render("template/home.html")
 			#self.render("template/index.html",class_tag1=cls1,class_tag2=cls2, label_message=label_msg, signup_display=signup_disp, login_display=login_disp)
@@ -101,3 +96,4 @@ if __name__ == "__main__":
 
 #db.users.find({'_id':ObjectId("58b169725d467e34b3718613")},{frinds:1,_id:0}).forEach(function(frind){db.users.find({$and:[{_id:{$nin:frind.frinds}},{_id:{$ne:ObjectId("58b169725d467e34b3718613")}}]}).forEach(function(u){print(u.name)})})
 #db.users.find({'_id':ObjectId("58b097a427e114d654b36ceb")},{frinds:1,_id:0}).forEach(function(frind){test=db.users.find({_id:{$in:frind.frinds}}).forEach(function(u){print(u.name)})})
+
