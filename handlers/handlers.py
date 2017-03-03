@@ -77,7 +77,7 @@ class SignupHandler(BaseHandler):
 		username=self.get_argument("signupname")
 		email=self.get_argument("signupemail")
 		pwd=self.get_argument("signuppwd")
-		new_user = {"name":username,"password":pwd,"email":email,"status":'on'}
+		new_user = {"name":username,"password":pwd,"email":email,"status":'on','groups_id':[],'friendId':[]}
 		try:
 			user_id = db.users.insert(new_user)
 			self.set_secure_cookie("id",str(user_id))
