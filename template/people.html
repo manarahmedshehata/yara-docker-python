@@ -3,10 +3,6 @@
 {% extends base.html %}
    {% block title %} Chat Game | Groups {% end %}
 {% block content %}
-
-
-
-
       <div class="chat">
          <div class="top">
             <div class="info">
@@ -14,13 +10,40 @@
             </div>
          </div>
          <h2>Your Friends</h2>
-         <ul class="memberof" style="height: 35%">
-         
-         
-         </ul>
+
+
+           <ul class="memberof" id="friendsMember" style="height: 35%">
+             {% for i,friend in enumerate(friend_in_list) %}
+              <li>
+                  <a class ="groups" href="/pchat" id={{friend['_id']}}> {{friend['name']}}</a></li>
+                   <form action="/blockfriend" method="post">
+                      <input type="hidden" name="block" value="friend">
+                      <input type="hidden" name="remove" value={{friend['_id']}}>
+                      <button type="submit" />block</button>
+                   </form>
+           {% end %}
+
+           </ul>
+
          <h2>All People</h2>
-         <ul class="allgroups"></ul>
-         <div><a href="/pchat" id="Sara" name="friend_name">friend</a></div>
+         <ul class="allgroups" id="friendsNotMember">
+           {% for i,friendnin in enumerate(friend_nin_list) %}
+            <li>
+                <a class ="groups" id={{friendnin['_id']}}> {{friendnin['name']}}</a></li>
+                 <form action="/add" method="post">
+                    <input type="hidden" name="add" value="friend">
+                    <input type="hidden" name="join" value={{friendnin['_id']}}>
+                    <button type="submit" />add</button>
+                 </form>
+         {% end %}
+
+
+         </ul>
       </div>
    </div>
+   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+   <script src='http://cdnjs.cloudflare.com/ajax/libs/nicescroll/3.5.4/jquery.nicescroll.js'></script>
+   <script src="../static/js/index.js"></script>
+
+
 {% end %}
