@@ -146,31 +146,6 @@ class PeopleHandler(BaseHandler):
 	def get(self):
 
 		db = self.application.database
-		userName = self.get_secure_cookie("name")
-		print(userName)
-		frnds_list = db.users.find({"name":userName},{"friendId":1})
-		# find friends
-		# frnds_list = db.users.find({name:userName},{friendId:1}).forEach(function(frind){=db.users.find({_id:{$in:frind.friendId}}).forEach(function(u){print(u.name)})})
-
-		# db = self.application.database
-		# userName = self.current_user
-		
-		# frnds_list = db.users.find({name:userName},{friendId:1})
-		# print(userName)
-		#find friends
-		# #frnds_list = db.users.find({name:userName},{friendId:1}).forEach(function(frind){=db.users.find({_id:{$in:frind.friendId}}).forEach(function(u){print(u.name)})})
-		# print(db.users.find({"name":userName},{"name":1}))
-		# print(frnds_list)
-		# for i in frnds_list.length:
-		# 	print(frnds_list[i])
-
-		# others_list = db.users.find({name:{$ne:userName}},{friendId:1}).forEach(function(frnd){db.users.find({$and[{_id:frnd},{name:{$ne:userName}}]},{"name":1})})
-
-		# self.render(templateurl+"people.html", user_name=self.current_user['name'], friends_list=frnds_list, status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
-
-		# self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
-
-		db = self.application.database
 		userName =self.current_user['name']
 		friends_list_in=[]
 		friends_list_notin=[]
@@ -328,6 +303,19 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 		pprint(clients)
 		msg=json.loads(message)
 		pprint(msg)
+
+		# save new message
+		my_file_path = "chatHistory/" + self.current_user['name'] + "/" + msg['fname'] + ".txt"
+		friend_file_path = "chatHistory/" + msg['fname'] + "/" + self.current_user['name'] + ".txt"
+
+		saved_message = self.current_user['name'] + "#" + msg['msg'] + '\n'
+
+		with open(my_file_path, "a") as myfile:
+			myfile.write(saved_message)
+
+		with open(friend_file_path, "a") as friendfile:
+			friendfile.write(saved_message)
+		
 		#db = self.application.databas
 		for c in clients:
 				if c['name'] in [msg['fname'],msg['myname']]:
