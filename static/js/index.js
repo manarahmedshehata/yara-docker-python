@@ -58,6 +58,60 @@ $(document).ready(function() {
   //     }, getRandomInt(2500, 500));
   //   }
   // };
+
+  // var webSocket;
+  $(".groups").click(function() {
+    var groupId = $(".grp").text();
+    console.log(groupId);
+    webSocket.send(groupId);
+    webSocket.onmessage = function (evt) {
+    alert(evt);
+    };
+  });
+
+$(window).on('beforeunload', function(){
+    webSocket.close();
+});
+
+//////////////////////////////////////////////////////
+
+// var ws_scheme = "ws://"
+
+
+// var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/receive");
+// var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/submit");
+
+// inbox.onmessage = function(message) {
+//   var data = JSON.parse(message.data);
+//   receiveI(data);
+// //   $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + $('<span/>').text(data.handle).html() + "</div><div class='panel-body'>" + $('<span/>').text(data.text).html() + "</div></div>");
+// //   $("#chat-text").stop().animate({
+// //     scrollTop: $('#chat-text')[0].scrollHeight
+// //   }, 800);
+// // };
+
+// inbox.onclose = function(){
+//     console.log('inbox closed');
+//     this.inbox = new WebSocket(inbox.url);
+
+// };
+
+// outbox.onclose = function(){
+//     console.log('outbox closed');
+//     this.outbox = new WebSocket(outbox.url);
+// };
+
+// $(".send").on("click", function(event) {
+//   event.preventDefault();
+//   //var handle = $("#input-handle")[0].value;
+//   var handle = "sara"
+//   var text   = $("#text")[0].value;
+//   outbox.send(JSON.stringify({ handle: handle, text: text }));
+//   $("#text")[0].value = "";
+// });
+
+//////////////////////////////////////
+
    insertI = function() {
     var innerText, otvet, friend_name;
     innerText = $.trim($("#text").val());
@@ -71,8 +125,8 @@ $(document).ready(function() {
       webSocket.send(msg)
     }
     //when receive message
-    receiveI =function(){
-      received_msg="tets"
+    receiveI =function(received_msg){
+   //   received_msg="tets"
       
       return otvet = setInterval(function() {
         $(".messages").append("<li class=\"friend\"><div class=\"head\"><span class=\"name\">" + $('#fr-username').html() + "</span><span class=\"time\">" + (new Date().getHours()) + ":" + (new Date().getMinutes()) + " AM, Today</span></div><div class=\"message\">" + received_msg + "</div></li>");
@@ -84,7 +138,7 @@ $(document).ready(function() {
   //doc ready
  
 
-
+// $(".groups").click(function())
 
 
 
@@ -106,23 +160,25 @@ $(document).ready(function() {
       }
     });
 
-    // var webSocket;
-    // $(function(){
-    //   webSocket= new WebSocket("ws://localhost:7070/ws");
-    // });
-
-
-
-    $(".send").click(function() {
-      //friend_name=$("div[id='fr-username']").text();
-
-      //console.log(friend_name);
-      return insertI();
+    var webSocket;
+    $(function(){
+      webSocket= new WebSocket("ws://localhost:7070/ws");
     });
+
+
+
+    // $(".send").click(function() {
+    //   friend_name=$("div[id='fr-username']").text();
+
+    //   console.log(friend_name);
+    //   return insertI();
+    // });
 //   $("a[name=friend_name]").click(function(){
 //   // todo make frind name appear in chat room
 //   friend_name=$("a[name='friend_name']").attr('id');
 //   console.log("friend_name");
 // });
+
 //End doc ready 
   });
+

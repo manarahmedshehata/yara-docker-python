@@ -42,6 +42,7 @@
       </div>
       </div>
    </div>
+   <script src="static/zepto.min.js"></script>
    <script>
    function showDiv() {
    document.getElementById('createGroup').style.display = "block";
@@ -54,5 +55,28 @@
 
   console.log(gx);
 }
+  //////////////////////////////////////////////////
+
+  Zepto(function($){
+        $('#btnLogin').click(function() {
+            var h;
+            h = window.location.host  + '/groupchat.html/?room=' + $('.groups').val(); //+ '&nick=' + $('#txtNickname').val();
+            window.location = '/?gchat=' + $('.groups').val(); //+ '&nick=' + $('#txtNickname').val();
+        });
+
+        $(".groups").keyup(function(event) { update_send(); } );
+        $("#txtNickname").keyup(function(event) { update_send(); } );
+
+    });
+
+    function update_send() {
+        if ( $(".groups").val() != "" && $("#txtNickname").val() != "") {
+            $("#btnLogin").removeAttr("disabled");
+        } else {
+            $("#btnLogin").attr("disabled", "disabled");
+        }
+    };
+
+  ///////////////////////////////////////////////
 </script>
 {% end %}
