@@ -15,14 +15,18 @@
            <ul class="memberof" id="friendsMember" style="height: 35%">
              {% for i,friend in enumerate(friend_in_list) %}
               <li>
-                  <a class ="groups" href="/pchat" id={{friend['_id']}}> {{friend['name']}}</a></li>
+                  <!-- <a class ="people" href="/pchat" id={{friend['_id']}}> {{friend['name']}}</a> -->
+                   <form action="/pchat" method="post">
+                      <input type="hidden" name="fnamee" value={{friend['name']}}>
+                      <button type="submit" />{{friend['name']}}</button>
+                   </form>
                    <form action="/blockfriend" method="post">
                       <input type="hidden" name="block" value="friend">
                       <input type="hidden" name="remove" value={{friend['_id']}}>
                       <button type="submit" />block</button>
                    </form>
            {% end %}
-
+           </li>
            </ul>
 
          <h2>All People</h2>

@@ -1,6 +1,6 @@
 
 //(function() {
-
+//var webSocket;
 $(document).ready(function() {
 
   var QUEEN, clearResizeScroll, conf, getRandomInt, insertI, lol;
@@ -178,6 +178,31 @@ $(window).on('beforeunload', function(){
 //   friend_name=$("a[name='friend_name']").attr('id');
 //   console.log("friend_name");
 // });
+
+  $("#status_button").change(function(){
+      var st=$("#status_button").prop('checked');
+      $.ajax({
+        method: 'get',
+        url:"/statuschange",
+        data:{status:st},
+        success: function(res){
+          //console.log()
+          console.log(st)
+          console.log(jQuery.type(st))
+          if(st){
+            console.log(st) 
+            $("#stlamp").addClass('on');
+            $("#stlamp").removeClass('off');
+          }
+          else if(!st){
+            $("#stlamp").addClass('off');
+            $("#stlamp").removeClass('on');
+          }
+          console.log("status request done");
+        }
+      })
+  });
+
 
 //End doc ready 
   });

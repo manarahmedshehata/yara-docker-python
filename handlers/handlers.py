@@ -199,6 +199,7 @@ class BaseHandler(web.RequestHandler):
 
 class PrivateChatHandler(websocket.WebSocketHandler,BaseHandler):
 	@web.authenticated
+<<<<<<< HEAD
 
 	def open(self):
 		print("WebSocket opened")
@@ -210,6 +211,10 @@ class PrivateChatHandler(websocket.WebSocketHandler,BaseHandler):
 		print("WebSocket closed")
 
 	def get(self):
+=======
+	def post(self):
+		fname=self.get_argument("fnamee")
+>>>>>>> 460baa56c02b4816186216e6d5a8bcb54dd20103
 		print("pchat")
 		pprint(self.current_user)
 		count = 0
@@ -227,7 +232,7 @@ class PrivateChatHandler(websocket.WebSocketHandler,BaseHandler):
 
 		f.seek(0);
 
-		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name="2", posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name=fname, posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 class GroupChatHandler(websocket.WebSocketHandler,BaseHandler):
 	@web.authenticated
@@ -350,7 +355,6 @@ class PeopleHandler(BaseHandler):
 
 		db = self.application.database
 		userName =self.current_user['name']
-		print(userName)
 		friends_list_in=[]
 		friends_list_notin=[]
 		db = self.application.database
@@ -362,7 +366,7 @@ class PeopleHandler(BaseHandler):
 				name=db.users.find({'_id':friend},{'name':1})
 				for n in name:
 					friends_list_in.append(n)
-			notin_name=db.users.find({'_id':{'$nin':f["friendId"]}},{'name':1})
+			notin_name=db.users.find({"$and":[{'_id':{'$nin':f["friendId"]}},{"name":{"$ne":user_id}}]},{'name':1})
 			for nin in notin_name:
 				friends_list_notin.append(nin)
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], friend_nin_list=friends_list_notin,friend_in_list=friends_list_in, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
@@ -442,6 +446,8 @@ class AddingHandler(BaseHandler):
 		print(addid)
 		# 	print("duplicates")
 		db.users.update({"_id":uid},{"$push":{add:addid}})
+		db.users.update({"_id":addid},{"$push":{add:uid}})
+
 		if fgadd== "friend":
 			self.redirect("/people")
 		elif fgadd== "group":
@@ -467,6 +473,7 @@ class BlockHandler(BaseHandler):
 			block = "groups_id"
 		#__TODO__Exceptions handling
 		update=db.users.update_one({"_id":uid},{"$pull":{block:removeid}})
+		update=db.users.update_one({"_id":removeid},{"$pull":{block:uid}})
 		if fgblock== "friend":
 			self.redirect("/people")
 		elif fgblock== "group":
@@ -489,10 +496,8 @@ class CreateGroupHandler(BaseHandler):
 #handling websocket
 clients = []
 class WSHandler(websocket.WebSocketHandler,BaseHandler):
-	pass
-"""
-	pprint(clients)
-	print("ws")
+	# pprint(clients)
+	# print("ws")
 	#@web.authenticated
 	def open(self):
 		# print(self.current_user)
@@ -501,15 +506,61 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 			client={'id':self.current_user['user'],'info':self,'name':self.current_user['name']}
 			pprint(client)
 			clients.append(client)
+		pprint(clients)
 	def on_message(self,message):
 		pprint(clients)
 		msg=json.loads(message)
 		pprint(msg)
-"""
 		#db = self.application.databas
+		for c in clients:
+				if c['name'] in [msg['fname'],msg['myname']]:
+					msgsent={'name':msg['fname'],'msg':msg['msg']}
+					pprint("--------------------------")
+					pprint(msgsent)
+					c['info'].write_message(json.dumps(msgsent))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##########################################
 class LogoutHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
 		self.clear_cookie("id")
 		self.redirect("/")
+
+class StatusChangeHandler(BaseHandler):
+	@web.authenticated
+	def get(self):
+		db=self.application.database
+		uid=ObjectId(self.current_user['user'])
+		status=self.get_argument('status')
+		print("/////////////////////////")
+		print("test chang status")
+		print(type(status))
+		print("//////-///////////////////")
+		if status=="true":
+			#update "on" in user db
+			#and update cookies status
+			stat='on'
+		elif status=="false":
+			stat='off'
+		print(uid)
+		update=db.users.update({"_id":uid},{"$set":{'status':stat}})
+
+		self.set_secure_cookie("status", stat)
+		#pprint(update)
+		#pprint(update.modified_count)
