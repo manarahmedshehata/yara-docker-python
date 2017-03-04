@@ -74,7 +74,7 @@ class SignupHandler(BaseHandler):
 	def post(self):
 		#insert user info
 		db = self.application.database
-		username=self.get_argument("signupname")
+		username=self.get_argumeQnt("signupname")
 		email=self.get_argument("signupemail")
 		pwd=self.get_argument("signuppwd")
 		new_user = {"name":username,"password":pwd,"email":email,"status":'on','groups_id':[],'friendId':[]}
@@ -94,21 +94,29 @@ class GroupsHandler(BaseHandler):
 	def get(self):
 		groupslist_in=[]
 		groupslist_notin=[]
+		owner=[]
 		db = self.application.database
-		user_id =self.current_user['name']
+		user_id =ObjectId(self.current_user['user'])
+
 		#pprint(type(user_id))
-		groups=db.users.find({'name':user_id},{'groups_id':1,'_id':0})
+		groups=db.users.find({'_id':user_id},{'groups_id':1,'_id':0})
 		for g in groups:
 			for group in g["groups_id"]:
-				name=db.groups.find({'_id':group},{'name':1})
+				name=db.groups.find({'_id':group})
+
 				for n in name:
-					groupslist_in.append(n)
+					pprint(n)
+					groupslist_in.append({'_id':n['_id'],'name':n['name']})
+					if n['owner'] == user_id:
+						owner.append(n['_id'])
 			notin_name=db.groups.find({'_id':{'$nin':g["groups_id"]}},{'name':1})
 			for nin in notin_name:
 				groupslist_notin.append(nin)
+		pprint(owner)
+
 		# db.users.find({name:userName}).forEach(function(user){ db.groups.find({user:user._id}).forEach(function(group) { print(group.name) }) })
 
-		self.render(templateurl+"groups.html", user_name=self.current_user['name'], status=self.current_user['status'], groups_list=groupslist_in,nin_grouplist=groupslist_notin, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		self.render(templateurl+"groups.html", user_name=self.current_user['name'], status=self.current_user['status'], groups_list=groupslist_in,nin_grouplist=groupslist_notin, owner=owner, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 class PeopleHandler(BaseHandler):
 	@web.authenticated
@@ -135,18 +143,17 @@ class PeopleHandler(BaseHandler):
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
-		db = self.application.database
-		groupname = self.get_query_arguments("groupname")
-		print(groupname)
-		try:
-			group_id = db.groups.insert({'name':groupname})
-			#__TODO Add group id to user
-			self.render(templateurl+"groups.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
-		except pymongo.errors.DuplicateKeyError:
-			self.write("Group name already in use")
-			self.redirect("/addgroup")
-
 		self.render(templateurl+"creategroup.html")
+	@web.authenticated	
+	def post(self):
+		
+		db = self.application.database
+		groupname = self.get_argument("groupname")
+		owner=ObjectId(self.current_user['user'])
+		group_id = db.groups.insert({'name':groupname,'owner':owner})
+		db.users.update({"_id":owner},{"$push":{'groups_id':group_id}})
+		self.redirect("/groups")
+
 
 # class ChatBotHandler(BaseHandler):
 # 	@web.authenticated
@@ -274,6 +281,7 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 		#db = self.application.databas
 ##########################################
 class LogoutHandler(BaseHandler):
-    def get(self):
-        self.clear_cookie(self.current_user['user'])
-        self.redirect("/")
+	@web.authenticated
+	def get(self):
+		self.clear_cookie("id")
+		self.redirect("/")

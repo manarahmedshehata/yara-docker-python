@@ -12,13 +12,17 @@
          <h2>Groups you're member of</h2>
          <ul class="memberof" style="height: 35%">
          {% for i,group in enumerate(groups_list) %}
-              <li> 
-                  <a class ="groups" href="/gchat" id={{group['_id'] }}> {{group['name'] }}</a></li>
+          <li> 
+            <a class ="groups" href="/gchat" id={{group['_id'] }}> {{group['name'] }}</a> 
+          </li>
+            {% if group['_id'] not in owner %}
                    <form action="/blockfriend" method="post">
                       <input type="hidden" name="block" value="group">
                       <input type="hidden" name="remove" value={{group['_id']}}>
                       <button type="submit" />leave group</button>
                    </form>
+            {% end %}
+            
            {% end %}
          </ul>
          <h2>All Groups</h2>
@@ -37,6 +41,7 @@
            {% end %}
            
          </ul>
+         <a href="/creategroup">Create new Group</a>
          <div id="createGroup"  style="display:none;" class="answer" > <p>Group Name :<input type="text" id="gName"></p> </div>
          <input type="button" name="answer" id="btnCreate" value="Create Group" onclick="showDiv()" />
       </div>
