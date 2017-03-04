@@ -135,9 +135,9 @@ class PeopleHandler(BaseHandler):
 				name=db.users.find({'_id':friend},{'name':1})
 				for n in name:
 					friends_list_in.append(n)
-			notin_name=db.users.find({'_id':{'$nin':f["friendId"]}},{'name':1})
+			notin_name=db.users.find({"$and":[{'_id':{'$nin':f["friendId"]}},{"name":{"$ne":user_id}}]},{'name':1})
 			for nin in notin_name:
-				friends_list_notin.append(nin)	
+				friends_list_notin.append(nin)
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], friend_nin_list=friends_list_notin,friend_in_list=friends_list_in, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 # Handler to Create Group
 class CreateGroupHandler(BaseHandler):
@@ -214,6 +214,8 @@ class AddingHandler(BaseHandler):
 		print(addid)
 		# 	print("duplicates")
 		db.users.update({"_id":uid},{"$push":{add:addid}})
+		db.users.update({"_id":addid},{"$push":{add:uid}})
+
 		if fgadd== "friend":
 			self.redirect("/people")
 		elif fgadd== "group":
@@ -239,6 +241,7 @@ class BlockHandler(BaseHandler):
 			block = "groups_id"
 		#__TODO__Exceptions handling
 		update=db.users.update_one({"_id":uid},{"$pull":{block:removeid}})
+		update=db.users.update_one({"_id":removeid},{"$pull":{block:uid}})
 		if fgblock== "friend":
 			self.redirect("/people")
 		elif fgblock== "group":
@@ -318,7 +321,7 @@ class StatusChangeHandler(BaseHandler):
 		print(type(status))
 		print("//////-///////////////////")
 		if status=="true":
-			#update "on" in user db 
+			#update "on" in user db
 			#and update cookies status
 			stat='on'
 		elif status=="false":
@@ -329,6 +332,3 @@ class StatusChangeHandler(BaseHandler):
 		self.set_secure_cookie("status", stat)
 		#pprint(update)
 		#pprint(update.modified_count)
-
-
-
