@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="../static/css/normalize.css">
     <link rel="stylesheet" href="../static/css/style.css">
 	
-	{% block script %} {% end %}
+	
 </head>
 <body>
    <div class="ui" style="width:1000px">
@@ -57,8 +57,10 @@
          </menu>
       </div>
 	{% block content %} {% end %}
+
 	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
    	<script src='http://cdnjs.cloudflare.com/ajax/libs/nicescroll/3.5.4/jquery.nicescroll.js'></script>
 	<script src="../static/js/index.js"></script>
+   {% block script %} {% end %}
 </body>
 </html>

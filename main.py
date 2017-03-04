@@ -49,6 +49,7 @@ class Application(web.Application):
 		self.database = self.con["Chat"]
 
 class MainHandler(BaseHandler):
+
 	cls1 = "active"
 	cls2 = ""
 	signup_disp = ""

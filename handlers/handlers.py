@@ -28,7 +28,8 @@ class BaseHandler(web.RequestHandler):
 
 class PrivateChatHandler(BaseHandler):
 	@web.authenticated
-	def get(self):
+	def post(self):
+		fname=self.get_argument("fnamee")
 		print("pchat")
 		pprint(self.current_user)
 		count = 0
@@ -43,7 +44,7 @@ class PrivateChatHandler(BaseHandler):
 
 		f.seek(0);
 
-		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name="2", posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name=fname, posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 class GroupChatHandler(BaseHandler):
 	@web.authenticated
@@ -74,7 +75,7 @@ class SignupHandler(BaseHandler):
 	def post(self):
 		#insert user info
 		db = self.application.database
-		username=self.get_argumeQnt("signupname")
+		username=self.get_argument("signupname")
 		email=self.get_argument("signupemail")
 		pwd=self.get_argument("signuppwd")
 		new_user = {"name":username,"password":pwd,"email":email,"status":'on','groups_id':[],'friendId':[]}
@@ -260,10 +261,8 @@ class CreateGroupHandler(BaseHandler):
 #handling websocket
 clients = []
 class WSHandler(websocket.WebSocketHandler,BaseHandler):
-	pass
-"""
-	pprint(clients)
-	print("ws")
+	# pprint(clients)
+	# print("ws")
 	#@web.authenticated
 	def open(self):
 		# print(self.current_user)
@@ -272,12 +271,35 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 			client={'id':self.current_user['user'],'info':self,'name':self.current_user['name']}
 			pprint(client)
 			clients.append(client)
+		pprint(clients)
 	def on_message(self,message):
 		pprint(clients)
 		msg=json.loads(message)
 		pprint(msg)
-"""
 		#db = self.application.databas
+		for c in clients:
+				if c['name'] in [msg['fname'],msg['myname']]:
+					msgsent={'name':msg['fname'],'msg':msg['msg']}
+					pprint("--------------------------")
+					pprint(msgsent)
+					c['info'].write_message(json.dumps(msgsent))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##########################################
 class LogoutHandler(BaseHandler):
 	@web.authenticated

@@ -13,7 +13,7 @@
          <ul class="memberof" style="height: 35%">
          {% for i,group in enumerate(groups_list) %}
           <li> 
-            <a class ="groups" href="/gchat" id={{group['_id'] }}> {{group['name'] }}</a> 
+            <a name ="groupchatlink" href="/gchat" id={{group['_id'] }}> {{group['name'] }}</a> 
           </li>
             {% if group['_id'] not in owner %}
                    <form action="/blockfriend" method="post">
@@ -42,22 +42,9 @@
            
          </ul>
          <a href="/creategroup">Create new Group</a>
-         <div id="createGroup"  style="display:none;" class="answer" > <p>Group Name :<input type="text" id="gName"></p> </div>
-         <input type="button" name="answer" id="btnCreate" value="Create Group" onclick="showDiv()" />
-      </div>
+
       </div>
    </div>
-   <script>
-   function showDiv() {
-   document.getElementById('createGroup').style.display = "block";
-  var btn = document.getElementById('btnCreate');
-  if ( btn.value == "Create Group") btn.value ="Create";
-  else {btn.value = "Create Group";document.getElementById('createGroup').style.display = "none";}
-  if ( document.getElementById("gName").value !="") {
-    var gx = document.getElementById("gName").value ;
-  }
 
-  console.log(gx);
-}
-</script>
 {% end %}
+   <script src="../static/js/gchat.js"></script>  
