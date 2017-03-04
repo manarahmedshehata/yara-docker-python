@@ -274,6 +274,8 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 		#db = self.application.databas
 ##########################################
 class LogoutHandler(BaseHandler):
-    def get(self):
-        self.clear_cookie(self.current_user['user'])
-        self.redirect("/")
+	@web.authenticated
+	def get(self):
+		print("hello")
+		self.clear_cookie("id")
+		self.redirect("/")
