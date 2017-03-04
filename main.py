@@ -24,14 +24,14 @@ class Application(web.Application):
 			(r"/home",HomeHandler),
 			(r"/groups",GroupsHandler),
 			(r"/people",PeopleHandler),
-			(r"/addgroup",CreateGroupHandler),
+			# (r"/addgroup",CreateGroupHandler),
 			# (r"/chatbot",ChatBotHandler)
 			#editing people friend requist
 			#(r"/addfriend",AddFriendHandler),
 			(r"/add",AddingHandler),
 			(r"/blockfriend",BlockHandler),
 			#create group
-			(r"/createGroup",CreateGroupHandler),
+			(r"/creategroup",CreateGroupHandler),
 			(r"/LogOut",LogoutHandler)
 			]
 
