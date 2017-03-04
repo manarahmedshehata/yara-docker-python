@@ -16,8 +16,9 @@
             <i class="fa fa-star"></i>
          </div>
          <ul class="messages">
-         {% for msg in filename %}
-	         {% if msg[0:msg.index("#")] == username %}
+         {% while file_content %}
+            {% for msg in filename %}
+	           {% if msg[0:msg.index("#")] == user_name %}
 	            <li class="i">
 	               <div class="head">
 	                  <span class="time">10:13 AM, Today</span>
@@ -25,7 +26,7 @@
 	               </div>
 	               <div class="message"> {{ msg[msg.index("#")+1:] }}</div>
 	            </li>
-	    	{% elif msg[0:msg.index("#")] == friend_name %}
+	       	{% elif msg[0:msg.index("#")] == friend_name %}
             <li class="friend">
                <div class="head">
                   <span class="name">{{ friend_name }}</span>
@@ -33,8 +34,10 @@
                </div>
                <div class="message">{{ msg[msg.index("#")+1:] }}</div>
             </li>
+               {% end %}
             {% end %}
-        {% end %}
+            {% break %}
+         {% end %}
          </ul>
          <div class="write-form">
             <textarea placeholder="Type your message" name="e" id="text" rows="2"></textarea>
