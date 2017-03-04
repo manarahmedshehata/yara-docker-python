@@ -33,18 +33,27 @@ class PrivateChatHandler(BaseHandler):
 		print("pchat")
 		pprint(self.current_user)
 		count = 0
+		history_content = True
 
-		f = open("template/test.txt")
+		try:
+			filePath = "chatHistory/" + self.current_user['name'] + "/" + fname + ".txt"
+			f = open(filePath)
+		except OSError as e:
+			f = open(filePath, 'w')
 		"""
 		for msg in f:
 			if if msg[0:msg.index("#")] == username
 		"""
-		for line in f:
-			count = count + 1
+		try:
+			for line in f:
+				count = count + 1
+		except OSError as e:
+			count = 0
+			history_content = False
 
 		f.seek(0);
 
-		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name=fname, posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], file_content=history_content, id_last_index=0, filename=f, username="1", friend_name=fname, posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 class GroupChatHandler(BaseHandler):
 	@web.authenticated
@@ -84,6 +93,11 @@ class SignupHandler(BaseHandler):
 			self.set_secure_cookie("id",str(user_id))
 			self.set_secure_cookie("name", username)
 			self.set_secure_cookie("status", 'on')
+			# create user chat history directory
+			directory = "chatHistory/" + username
+			if not os.path.exists(directory):
+				os.makedirs(directory)
+
 			self.render(templateurl+"home.html", user_name=username, status='on', group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 		except pymongo.errors.DuplicateKeyError:
 			# error in signup if duplicated name
