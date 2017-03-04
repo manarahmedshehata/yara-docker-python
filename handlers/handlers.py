@@ -304,7 +304,7 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 		msg=json.loads(message)
 		pprint(msg)
 
-		# save new message
+		# save new message to current user's chat history and friend's chat history
 		my_file_path = "chatHistory/" + self.current_user['name'] + "/" + msg['fname'] + ".txt"
 		friend_file_path = "chatHistory/" + msg['fname'] + "/" + self.current_user['name'] + ".txt"
 
