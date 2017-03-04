@@ -32,6 +32,7 @@ class Application(web.Application):
 			(r"/blockfriend",BlockHandler),
 			#create group
 			(r"/creategroup",CreateGroupHandler),
+			(r"/statuschange",StatusChangeHandler),
 			(r"/LogOut",LogoutHandler)
 			]
 		settings = dict(
@@ -81,8 +82,8 @@ class MainHandler(BaseHandler):
 			for c in users:
 				self.set_secure_cookie("id",str(c['_id']))
 				self.set_secure_cookie("name", c['name'])
-				#self.set_secure_cookie("status", c['status'])
-				self.set_secure_cookie("status", 'on')
+				self.set_secure_cookie("status", c['status'])
+				#self.set_secure_cookie("status", 'on')
 			self.redirect("/home")
 			#self.render("template/home.html")
 			#self.render("template/index.html",class_tag1=cls1,class_tag2=cls2, label_message=label_msg, signup_display=signup_disp, login_display=login_disp)

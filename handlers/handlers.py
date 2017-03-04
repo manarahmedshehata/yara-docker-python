@@ -123,7 +123,6 @@ class PeopleHandler(BaseHandler):
 	def get(self):
 		db = self.application.database
 		userName =self.current_user['name']
-		print(userName)
 		friends_list_in=[]
 		friends_list_notin=[]
 		db = self.application.database
@@ -137,7 +136,7 @@ class PeopleHandler(BaseHandler):
 					friends_list_in.append(n)
 			notin_name=db.users.find({'_id':{'$nin':f["friendId"]}},{'name':1})
 			for nin in notin_name:
-				friends_list_notin.append(nin)
+				friends_list_notin.append(nin)	
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], friend_nin_list=friends_list_notin,friend_in_list=friends_list_in, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 # Handler to Create Group
 class CreateGroupHandler(BaseHandler):
@@ -285,3 +284,29 @@ class LogoutHandler(BaseHandler):
 	def get(self):
 		self.clear_cookie("id")
 		self.redirect("/")
+
+class StatusChangeHandler(BaseHandler):
+	@web.authenticated
+	def get(self):
+		db=self.application.database
+		uid=ObjectId(self.current_user['user'])
+		status=self.get_argument('status')
+		print("/////////////////////////")
+		print("test chang status")
+		print(type(status))
+		print("//////-///////////////////")
+		if status=="true":
+			#update "on" in user db 
+			#and update cookies status
+			stat='on'
+		elif status=="false":
+			stat='off'
+		print(uid)
+		update=db.users.update({"_id":uid},{"$set":{'status':stat}})
+
+		self.set_secure_cookie("status", stat)
+		#pprint(update)
+		#pprint(update.modified_count)
+
+
+
