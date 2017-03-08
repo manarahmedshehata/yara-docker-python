@@ -6,9 +6,12 @@ from pprint import pprint
 from bson.objectid import ObjectId #deal with object pymongo
 from bson.code import Code
 from bson import ObjectId
-
+import uuid
+import tornado.ioloop
+import tornado.web
 
 templateurl = "../template/"
+
 
 class BaseHandler(web.RequestHandler):
 	def get_current_user(self):
@@ -26,29 +29,41 @@ class BaseHandler(web.RequestHandler):
 
 		return user
 
-class PrivateChatHandler(BaseHandler):
+class PrivateChatHandler(websocket.WebSocketHandler,BaseHandler):
 	@web.authenticated
 	def post(self):
 		fname=self.get_argument("fnamee")
 		print("pchat")
 		pprint(self.current_user)
 		count = 0
+		history_content = True
 
-		f = open("template/test.txt")
+		try:
+			filePath = "chatHistory/" + self.current_user['name'] + "/" + fname + ".txt"
+			f = open(filePath)
+		except OSError as e:
+			f = open(filePath, 'w')
 		"""
 		for msg in f:
 			if if msg[0:msg.index("#")] == username
 		"""
-		for line in f:
-			count = count + 1
+		try:
+			for line in f:
+				count = count + 1
+		except OSError as e:
+			count = 0
+			history_content = False
 
 		f.seek(0);
 
-		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name=fname, posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], file_content=history_content, id_last_index=0, filename=f, username="1", friend_name=fname, posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
-class GroupChatHandler(BaseHandler):
+class GroupChatHandler(websocket.WebSocketHandler,BaseHandler):
 	@web.authenticated
+
 	def post(self):
+		pprint(self.current_user)
+		count = 0
 		f = open("template/test.txt")
 
 		count = 0
@@ -97,6 +112,11 @@ class SignupHandler(BaseHandler):
 			self.set_secure_cookie("id",str(user_id))
 			self.set_secure_cookie("name", username)
 			self.set_secure_cookie("status", 'on')
+			# create user chat history directory
+			directory = "chatHistory/" + username
+			if not os.path.exists(directory):
+				os.makedirs(directory)
+
 			self.render(templateurl+"home.html", user_name=username, status='on', group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 		except pymongo.errors.DuplicateKeyError:
 			# error in signup if duplicated name
@@ -135,6 +155,8 @@ class GroupsHandler(BaseHandler):
 class PeopleHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
+		db = self.application.database
+		userName =self.current_user['name']
 		friends_list_in=[]
 		friends_list_notin=[]
 		db = self.application.database
@@ -146,14 +168,15 @@ class PeopleHandler(BaseHandler):
 				name=db.users.find({'_id':friend},{'name':1})
 				for n in name:
 					friends_list_in.append(n)
-			notin_name=db.users.find({'_id':{'$nin':f["friendId"]}},{'name':1})
+			notin_name=db.users.find({"$and":[{'_id':{'$nin':f["friendId"]}},{"name":{"$ne":user_id}}]},{'name':1})
 			for nin in notin_name:
-				friends_list_notin.append(nin)	
+				friends_list_notin.append(nin)
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], friend_nin_list=friends_list_notin,friend_in_list=friends_list_in, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 # Handler to Create Group
 class CreateGroupHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
+		userID = str(self.get_secure_cookie("id"),'utf-8')
 		self.render(templateurl+"creategroup.html")
 	@web.authenticated
 	def post(self):
@@ -225,6 +248,8 @@ class AddingHandler(BaseHandler):
 		print(addid)
 		# 	print("duplicates")
 		db.users.update({"_id":uid},{"$push":{add:addid}})
+		db.users.update({"_id":addid},{"$push":{add:uid}})
+
 		if fgadd== "friend":
 			self.redirect("/people")
 		elif fgadd== "group":
@@ -250,6 +275,7 @@ class BlockHandler(BaseHandler):
 			block = "groups_id"
 		#__TODO__Exceptions handling
 		update=db.users.update_one({"_id":uid},{"$pull":{block:removeid}})
+		update=db.users.update_one({"_id":removeid},{"$pull":{block:uid}})
 		if fgblock== "friend":
 			self.redirect("/people")
 		elif fgblock== "group":
@@ -286,6 +312,19 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 		pprint(clients)
 		msg=json.loads(message)
 		pprint(msg)
+
+		# save new message to current user's chat history and friend's chat history
+		my_file_path = "chatHistory/" + self.current_user['name'] + "/" + msg['fname'] + ".txt"
+		friend_file_path = "chatHistory/" + msg['fname'] + "/" + self.current_user['name'] + ".txt"
+
+		saved_message = self.current_user['name'] + "#" + msg['msg'] + '\n'
+
+		with open(my_file_path, "a") as myfile:
+			myfile.write(saved_message)
+
+		with open(friend_file_path, "a") as friendfile:
+			friendfile.write(saved_message)
+		
 		#db = self.application.databas
 		for c in clients:
 				if c['name'] in [msg['fname'],msg['myname']]:
@@ -362,7 +401,7 @@ class StatusChangeHandler(BaseHandler):
 		print(type(status))
 		print("//////-///////////////////")
 		if status=="true":
-			#update "on" in user db 
+			#update "on" in user db
 			#and update cookies status
 			stat='on'
 		elif status=="false":
@@ -373,6 +412,3 @@ class StatusChangeHandler(BaseHandler):
 		self.set_secure_cookie("status", stat)
 		#pprint(update)
 		#pprint(update.modified_count)
-
-
-

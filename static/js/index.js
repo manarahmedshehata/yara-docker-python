@@ -1,4 +1,3 @@
-
 //(function() {
 //var webSocket;
 $(document).ready(function() {

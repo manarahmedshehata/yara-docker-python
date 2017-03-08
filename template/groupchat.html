@@ -29,20 +29,20 @@
             {% elif msg[0:msg.index("#")] == user %}
                <li class="friend">
                   <div class="head">
-                     <span class="name">{{ user }}</span>
+                     <span class="name" id="nickList">{{ user }}</span>
                      <span class="time">10:15 AM, Today</span>
                   </div>
-                  <div class="message">{{ msg[msg.index("#")+1:] }}</div>
+                  <div class="message" id="msgList">{{ msg[msg.index("#")+1:] }}</div>
                </li>
                {% end %}
             {% end %}
         {% end %}
          </ul>
          <div class="write-form">
-            <textarea placeholder="Type your message" name="e" id="text" rows="2"></textarea>
+            <textarea placeholder="Type your message" name="e" id="text" rows="2" id="txtMsg"></textarea>
             <i class="fa fa-picture-o"></i>
             <i class="fa fa-file-o"></i>
-            <span class="send">Send</span>
+            <span class="send" id="btnSend">Send</span>
          </div>
       </div>
       <div class="left-menu">
@@ -63,5 +63,6 @@
    <!-- </div> -->
    {% end %}
 {% block script %} 
+
    <script src="../static/js/gchat.js"></script>
 {% end %}

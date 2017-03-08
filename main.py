@@ -25,7 +25,6 @@ class Application(web.Application):
 			(r"/home",HomeHandler),
 			(r"/groups",GroupsHandler),
 			(r"/people",PeopleHandler),
-			# (r"/addgroup",CreateGroupHandler),
 			# (r"/chatbot",ChatBotHandler)
 			#editing people friend requist
 			#(r"/addfriend",AddFriendHandler),
@@ -36,6 +35,7 @@ class Application(web.Application):
 			(r"/statuschange",StatusChangeHandler),
 			(r"/LogOut",LogoutHandler)
 			]
+
 		settings = dict(
 			autoescape=None,
 			autoreload=True,
@@ -56,6 +56,7 @@ class MainHandler(BaseHandler):
 	signup_disp = ""
 	login_disp = ""
 	def get(self):
+
 		print("///")
 		if self.get_argument("sp",False):
 			self.render("template/index.html",class_tag1=self.cls1,class_tag2=self.cls2, error=False, signup_display=self.signup_disp, login_display=self.login_disp,sp_error=True)
@@ -63,7 +64,6 @@ class MainHandler(BaseHandler):
 			self.render("template/index.html",class_tag1=self.cls1,class_tag2=self.cls2, error=False, signup_display=self.signup_disp, login_display=self.login_disp,sp_error=False)
 		else:
 			self.redirect("/home")
-
 	def post(self):
 		db = self.application.database
 		username=self.get_argument("username")
@@ -87,9 +87,6 @@ class MainHandler(BaseHandler):
 				self.set_secure_cookie("status", c['status'])
 				#self.set_secure_cookie("status", 'on')
 			self.redirect("/home")
-			#self.render("template/home.html")
-			#self.render("template/index.html",class_tag1=cls1,class_tag2=cls2, label_message=label_msg, signup_display=signup_disp, login_display=login_disp)
-#############################################################
 
 """
 @ Main Function
@@ -102,10 +99,3 @@ def main():
 	rh = RoomHandler()
 if __name__ == "__main__":
 	main()
-
-
-#db.users.find({'_id':ObjectId("58b169725d467e34b3718613")},{frinds:1,_id:0}).forEach(function(frind){db.users.find({$and:[{_id:{$nin:frind.frinds}},{_id:{$ne:ObjectId("58b169725d467e34b3718613")}}]}).forEach(function(u){print(u.name)})})
-#db.users.find({'_id':ObjectId("58b097a427e114d654b36ceb")},{frinds:1,_id:0}).forEach(function(frind){test=db.users.find({_id:{$in:frind.frinds}}).forEach(function(u){print(u.name)})})
-################################################################3333
-###################################################################################
-#######################################################################################

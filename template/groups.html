@@ -5,13 +5,19 @@
       <div class="chat">
          <div class="top">
             <div class="info">
-               <div class="name" style="margin-left: 160px;font-size: 50px; text-decoration: underline;">Groups</div>
+               <div class="name" style="margin-left: 160px;font-size: 40px; text-decoration: underline;">Groups</br>
+
+               </div>
+             </br>
+             <h2><div align="right"><a href="/creategroup" >Create new Group</a></div></h2>
             </div>
          </div>
          <div>
+         </br>
          <h2>Groups you're member of</h2>
          <ul class="memberof" style="height: 35%">
          {% for i,group in enumerate(groups_list) %}
+
           <li> 
             <!-- <a name ="groupchatlink" href="/gchat" id={{group['_id'] }}> {{group['name'] }}</a>  -->
                     <form  name = "groom" action="/gchat" method="post">
@@ -26,14 +32,14 @@
                       <button type="submit" />leave group</button>
                    </form>
             {% end %}
-            
+
            {% end %}
            </li>
          </ul>
          <h2>All Groups</h2>
          <ul class="allgroups">
             {% for i,groupnin in enumerate(nin_grouplist) %}
-              <li> 
+              <li>
                   <!-- <a class ="groups" href="/gchat" id={{groupnin["_id"] }}> {{groupnin['name'] }}</a> -->
                   <p>{{groupnin['name'] }}</p>
                     <form action="/add" method="post">
@@ -44,11 +50,22 @@
 
               </li>
            {% end %}
-           
+
          </ul>
-         <a href="/creategroup">Create new Group</a>
+
 
       </div>
    </div>
+   <script>
+   function showDiv() {
+   document.getElementById('createGroup').style.display = "block";
+  var btn = document.getElementById('btnCreate');
+  if ( btn.value == "Create Group") btn.value ="Create";
+  else {btn.value = "Create Group";document.getElementById('createGroup').style.display = "none";}
+  if ( document.getElementById("gName").value !="") {
+    var gx = document.getElementById("gName").value ;
+  }
 
+  console.log(gx);
+}
 {% end %}
