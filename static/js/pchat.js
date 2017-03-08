@@ -1,4 +1,4 @@
-var webSocket;
+  var webSocket;
 $(document).ready(function() {
 
   var clearResizeScroll, conf, getRandomInt, insertI, lol;

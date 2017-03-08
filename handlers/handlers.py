@@ -48,7 +48,7 @@ class PrivateChatHandler(BaseHandler):
 
 class GroupChatHandler(BaseHandler):
 	@web.authenticated
-	def get(self):
+	def post(self):
 		f = open("template/test.txt")
 
 		count = 0
@@ -58,7 +58,20 @@ class GroupChatHandler(BaseHandler):
 
 		f.seek(0)
 
-		self.render(templateurl+"groupchat.html", user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, group_name="Eqraa", posts_no=count, chat_members=["2","3","4"], filename=f, username="1", group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		gname=self.get_argument("gname")
+		gid=self.get_argument("gid")
+
+		#get groups user with name, id and status
+		db = self.application.database
+		gusers=db.users.find({"groups_id":ObjectId(gid)},{"name":1,"status"	:1})
+		gusr=[]
+		for gu in gusers:
+			
+			gusr.append(gu)
+		pprint(gusr)
+
+
+		self.render(templateurl+"groupchat.html", user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, group_name=gname,gidd=gid,gusr=gusr, posts_no=count, chat_members=["2","3","4"], filename=f, username="1", group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 class HomeHandler(BaseHandler):
 	@web.authenticated
@@ -122,8 +135,6 @@ class GroupsHandler(BaseHandler):
 class PeopleHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
-		db = self.application.database
-		userName =self.current_user['name']
 		friends_list_in=[]
 		friends_list_notin=[]
 		db = self.application.database
@@ -269,7 +280,6 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 		if self.current_user:
 			print("ws")
 			client={'id':self.current_user['user'],'info':self,'name':self.current_user['name']}
-			pprint(client)
 			clients.append(client)
 		pprint(clients)
 	def on_message(self,message):
@@ -286,18 +296,52 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+groups = []
+class GWSHandler(websocket.WebSocketHandler,BaseHandler):
+	def open(self):
+		# print(self.current_user)
+		if self.current_user:
+		 	print('gws')
+		# 	group={'gid':'1','users_info':[self],'user_name':self.current_user['name']}
+		# 	groups.append(group)
+		# pprint(groups)
+	def on_message(self,message):
+		print("----------------ONMSG--------------")
+		msg=json.loads(message)
+		pprint(msg)
+		if not "msg" in msg:
+			# Start group msg
+			# __TODO add user to group id 
+			if groups ==[]:
+				group={'gid':msg['gid'],'users_info':[self]}
+				groups.append(group)
+			else:
+				group_modified=False
+				for g in groups:
+					print("for")
+					if g['gid'] == msg['gid']:
+						print("if")
+						g["users_info"].append(self)
+						group_modified=True
+				print("modified",group_modified)
+				if(not group_modified):
+					group={'gid':msg['gid'],'users_info':[self]}
+					groups.append(group)
+			print('=====start')
+			pprint(groups)
+		else:
+			print('=====msg')
+			pprint(groups)
+			pprint(msg)	
+			for g in groups:
+				if g['gid'] == msg['gid']:
+					print(msg['gid'])
+					#db = self.application.databas
+					for user in g['users_info']:
+						msgsent={'sender':msg['sender'],'msg':msg['msg']}
+						pprint("--------------------------")
+						pprint(msgsent)
+						user.write_message(json.dumps(msgsent))
 
 
 ##########################################

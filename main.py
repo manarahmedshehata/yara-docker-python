@@ -21,6 +21,7 @@ class Application(web.Application):
 			(r"/pchat",PrivateChatHandler),
 			(r"/ws",WSHandler),
 			(r"/gchat",GroupChatHandler),
+			(r"/gws",GWSHandler),
 			(r"/home",HomeHandler),
 			(r"/groups",GroupsHandler),
 			(r"/people",PeopleHandler),
