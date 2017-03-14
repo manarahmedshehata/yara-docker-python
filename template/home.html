@@ -7,6 +7,16 @@
          <div class="top">
             <div class="info">
                <div class="name" style="margin-top: 20px; margin-left: 160px;font-size: 25px;">Leaderboard</div>
+               <!-- pubicfigure_name -->
+               <h1>pubic figure name sorted</h1>
+               {% for pubicfigure_n in pubicfigure_name %}
+                  <p>{{pubicfigure_n}}</p>
+               {% end %}
+               <!-- partymans -->
+               <h1>Party man name sorted</h1>
+               {% for partyman in partymans %}
+                  <p>{{partyman}}</p>
+               {% end %}
 
             </div>
          </div>

@@ -69,21 +69,6 @@ $(document).ready(function() {
       }, getRandomInt(2500, 500));
     };
   //doc ready
- 
-
-
-
-
-
-//End main function 
-//}).call(this);
-
-// var webSocket;
-// $(function(){
-//   webSocket= new WebSocket("ws://localhost:8888/ws");
-// });
-
-    //var friend_name;
     $(".list-pages").niceScroll(conf);
     $(".messages").niceScroll(lol);
     $("#text").keypress(function(e) {

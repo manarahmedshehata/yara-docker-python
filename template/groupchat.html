@@ -13,7 +13,14 @@
                <div class="name" id="gr-username">{{ group_name }}</div>
                <div class="count">already {{ posts_no }} messages</div>
             </div>
-            <i class="fa fa-star"></i>
+             <i class="fa fa-star">
+              <form  action="/blockfriend" method="post">
+                      <input type="hidden" name="block" value="group">
+                      <input type="hidden" name="remove" value={{gidd}}>
+                      <button type="submit" >leave group</button>
+                   </form>
+           </i>
+
          </div>
          <ul class="messages">
          {% for msg in filename %}

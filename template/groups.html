@@ -23,13 +23,13 @@
                     <form  name = "groom" action="/gchat" method="post">
                       <input type="hidden" name="gid" value={{group['_id'] }}>
                       <input type="hidden" name="gname" value={{group['name'] }}>
-                      <button type="submit" />{{group['name']}}</button>
+                      <button type="submit" >{{group['name']}}</button>
                    </form>
             {% if group['_id'] not in owner %}
                    <form action="/blockfriend" method="post">
                       <input type="hidden" name="block" value="group">
                       <input type="hidden" name="remove" value={{group['_id']}}>
-                      <button type="submit" />leave group</button>
+                      <button type="submit" >leave group</button>
                    </form>
             {% end %}
 
@@ -56,16 +56,5 @@
 
       </div>
    </div>
-   <script>
-   function showDiv() {
-   document.getElementById('createGroup').style.display = "block";
-  var btn = document.getElementById('btnCreate');
-  if ( btn.value == "Create Group") btn.value ="Create";
-  else {btn.value = "Create Group";document.getElementById('createGroup').style.display = "none";}
-  if ( document.getElementById("gName").value !="") {
-    var gx = document.getElementById("gName").value ;
-  }
-
-  console.log(gx);
-}
+  
 {% end %}

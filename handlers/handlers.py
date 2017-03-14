@@ -92,10 +92,25 @@ class HomeHandler(BaseHandler):
 	@web.authenticated
 	def get(self):
 		print("++++++++++++++++++++++++++++++++")
-		print(type(self.current_user['name']))
-		print("++++++++++++++++++++++++++++++++")
 		print(self.current_user)
-		self.render(templateurl+"home.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		db = self.application.database
+		pubicfigure_condition=[{"$project":{"name":1,"_id":0,"count":{"$size":"$friendId"}}},{"$sort":{'count':-1}},{"$limit":5}]
+		partyman_condition=[{"$project":{"name":1,"_id":0,"count":{"$size":"$groups_id"}}},{"$sort":{'count':-1}},{"$limit":5}]
+		# GET PUBLIC FIGURE
+		pubicfigure_name=[]
+		pubicfigure=db.users.aggregate(pubicfigure_condition)
+		for u in pubicfigure:
+			pubicfigure_name.append(u['name'])
+
+		partymans=[]
+		partyman=db.users.aggregate(partyman_condition)
+		for party in partyman:
+			partymans.append(party['name'])
+
+		pprint(pubicfigure_name)
+		pprint(partymans)
+
+		self.render(templateurl+"home.html", user_name=self.current_user['name'], status=self.current_user['status'], pubicfigure_name=pubicfigure_name, partymans=partymans,  group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 #handling signup in db and cookies (registeration and login)
 class SignupHandler(BaseHandler):
@@ -332,6 +347,12 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 					pprint("--------------------------")
 					pprint(msgsent)
 					c['info'].write_message(json.dumps(msgsent))
+	def on_close(self):
+		for u in clients:
+			if self == u['info']:
+				clients.remove(u)
+
+
 
 
 
@@ -381,6 +402,21 @@ class GWSHandler(websocket.WebSocketHandler,BaseHandler):
 						pprint("--------------------------")
 						pprint(msgsent)
 						user.write_message(json.dumps(msgsent))
+	def on_close(self):
+		# print("(===========close=============)")
+		pprint(groups)
+		for g in groups:
+			for user in g['users_info']:
+				if user == self:
+					g['users_info'].remove(user)
+		print("(===========close=============)")
+		pprint(groups)
+
+
+
+
+
+
 
 
 ##########################################
