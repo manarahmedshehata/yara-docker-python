@@ -9,27 +9,27 @@
 
                </div>
              </br>
-             <h2><div align="right"><a href="/creategroup" >Create new Group</a></div></h2>
+             <div style="margin-left: 100%;"><a href="/creategroup"><img width="50" height="50" src="../static/img/addicon.png" alt=""></a></div>
             </div>
          </div>
          <div>
          </br>
          <h2>Groups you're member of</h2>
-         <ul class="memberof" style="height: 35%">
+         <ul class="memberof" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
          {% for i,group in enumerate(groups_list) %}
 
-          <li> 
+          <li style="margin:30px;display: inline-block;" class="button"> 
             <!-- <a name ="groupchatlink" href="/gchat" id={{group['_id'] }}> {{group['name'] }}</a>  -->
                     <form  name = "groom" action="/gchat" method="post">
-                      <input type="hidden" name="gid" value={{group['_id'] }}>
-                      <input type="hidden" name="gname" value={{group['name'] }}>
-                      <button type="submit" >{{group['name']}}</button>
+                      <input type="hidden" name="gid" value={{group['_id'] }} style="background-color: white;">
+                      <input type="hidden" name="gname" value={{group['name'] }} style="display:inline-block;">
+                      <button type="submit" style="background-color:#e7e7e7;border:1px solid #e7e7e7;margin-bottom: 3px;">{{group['name']}}</button>
                    </form>
             {% if group['_id'] not in owner %}
                    <form action="/blockfriend" method="post">
                       <input type="hidden" name="block" value="group">
                       <input type="hidden" name="remove" value={{group['_id']}}>
-                      <button type="submit" >leave group</button>
+                      <button type="submit"><img width="20" height="20" src="../static/img/leavegroup2.png" alt=""></button>
                    </form>
             {% end %}
 
@@ -37,15 +37,15 @@
            </li>
          </ul>
          <h2>All Groups</h2>
-         <ul class="allgroups">
+         <ul class="allgroups" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
             {% for i,groupnin in enumerate(nin_grouplist) %}
-              <li>
+              <li style="margin:30px;display: inline-block;" class="button">
                   <!-- <a class ="groups" href="/gchat" id={{groupnin["_id"] }}> {{groupnin['name'] }}</a> -->
-                  <p>{{groupnin['name'] }}</p>
+                  <p style="font-family: sans-serif;">{{groupnin['name'] }}</p>
                     <form action="/add" method="post">
                     <input type="hidden" name="add" value="group">
                       <input type="hidden" name="join" value={{groupnin['_id']}}>
-                      <button type="submit" />Join group</button>
+                      <button type="submit"><img width="20" height="20" src="../static/img/joingroup.png" alt=""></button>
                     </form>
 
               </li>

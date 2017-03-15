@@ -39,7 +39,7 @@ class PrivateChatHandler(websocket.WebSocketHandler,BaseHandler):
 		history_content = True
 
 		try:
-			filePath = "chatHistory/" + self.current_user['name'] + "/" + fname + ".txt"
+			filePath = "chatHistory/people/" + self.current_user['name'] + "/" + fname + ".txt"
 			f = open(filePath)
 		except OSError as e:
 			f = open(filePath, 'w')
@@ -63,30 +63,45 @@ class GroupChatHandler(websocket.WebSocketHandler,BaseHandler):
 
 	def post(self):
 		pprint(self.current_user)
-		count = 0
-		f = open("template/test.txt")
-
-		count = 0
-
-		for line in f:
-		  count = count + 1
-
-		f.seek(0)
-
 		gname=self.get_argument("gname")
 		gid=self.get_argument("gid")
+
+		count = 0
+		history_content = True
+
+		try:
+			filePath = "chatHistory/groups/" + gid + ".txt"
+			f = open(filePath)
+		
+		except OSError as e:
+			f = open(filePath, 'w+')
+
+		members = []
+
+		try:
+			for line in f:
+				count = count + 1
+		except OSError as e:
+			count = 0
+			history_content = False
+
+		f.seek(0);
+
+		# pprint(history_content)
 
 		#get groups user with name, id and status
 		db = self.application.database
 		gusers=db.users.find({"groups_id":ObjectId(gid)},{"name":1,"status"	:1})
 		gusr=[]
 		for gu in gusers:
-			
 			gusr.append(gu)
+			members.append(gu["name"])
+			# pprint(members)
+
 		pprint(gusr)
 
 
-		self.render(templateurl+"groupchat.html", user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, group_name=gname,gidd=gid,gusr=gusr, posts_no=count, chat_members=["2","3","4"], filename=f, username="1", group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		self.render(templateurl+"groupchat.html", group_members=members, file_content=history_content, user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, group_name=gname,gidd=gid,gusr=gusr, posts_no=count, chat_members=["2","3","4"], filename=f, username="1", group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 class HomeHandler(BaseHandler):
 	@web.authenticated
@@ -117,7 +132,62 @@ class HomeHandler(BaseHandler):
 		pprint(pubicfigure_name)
 		pprint(partymans)
 
-		self.render(templateurl+"home.html", user_name=self.current_user['name'], status=self.current_user['status'], rquests=requests, pubicfigure_name=pubicfigure_name, partymans=partymans,  group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		# Best friend and chatty man
+		privateChatDir = "chatHistory/people/"
+		pprint(privateChatDir)
+		currentUserDir = privateChatDir + self.current_user['name'] + "/"
+		pprint(currentUserDir)
+		groupChatDir = "chatHistory/groups"
+
+
+		# Best Friend List
+		friends_dict = {}
+		# bfriend = []
+
+		for filename in os.listdir(currentUserDir):
+			# pprint(filename)
+			pprint("inside for")
+			fname = currentUserDir + filename
+			with open(fname) as f:
+				friends_dict[filename.replace(".txt","")] = len(f.readlines())
+
+		pprint(friends_dict)
+		bfriend = sorted(friends_dict, key=friends_dict.get, reverse=True)
+			# best_friend.append(key)
+
+		pprint("lol")
+		pprint(bfriend)
+
+		# Chatty One List
+		chatty_dict = {}
+		chatty_list = []
+
+		subdirs = [x[0] for x in os.walk(privateChatDir)]
+		for subdir in subdirs:
+			# pprint(subdir)
+			chatty_dict[subdir] = 0
+			files = os.walk(subdir).__next__()[2]
+
+			if (len(files) > 0):
+				for file in files: 
+					chatty_dict[subdir] += 1                                                                                      
+
+		# pprint(chatty_dict)
+
+		chatty_list = sorted(chatty_dict, key=chatty_dict.get, reverse=True)
+
+		x = 0
+
+		while x < len(chatty_list):
+			chatty_list[x] = chatty_list[x].replace(privateChatDir,"")
+			x += 1
+
+		# pprint(chatty_list)
+
+		length = len(chatty_list) - 2
+		chatty_list = chatty_list[:length]
+
+		self.render(templateurl+"home.html", chatty_ones=chatty_list[:5], best_friends=bfriend[:5], user_name=self.current_user['name'], status=self.current_user['status'], rquests=requests, pubicfigure_name=pubicfigure_name, partymans=partymans,  group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 #handling signup in db and cookies (registeration and login)
 class SignupHandler(BaseHandler):
@@ -135,7 +205,7 @@ class SignupHandler(BaseHandler):
 			self.set_secure_cookie("name", username)
 			self.set_secure_cookie("status", 'on')
 			# create user chat history directory
-			directory = "chatHistory/" + username
+			directory = "chatHistory/people/" + username
 			if not os.path.exists(directory):
 				os.makedirs(directory)
 
@@ -208,6 +278,10 @@ class CreateGroupHandler(BaseHandler):
 		owner=ObjectId(self.current_user['user'])
 		group_id = db.groups.insert({'name':groupname,'owner':owner})
 		db.users.update({"_id":owner},{"$push":{'groups_id':group_id}})
+		
+		filePath = "chatHistory/groups/" + str(group_id) + ".txt"
+		f = open(filePath, 'w+')
+
 		self.redirect("/groups")
 
 
@@ -338,11 +412,19 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 		msg=json.loads(message)
 		pprint(msg)
 
+		# Private Chats
 		# save new message to current user's chat history and friend's chat history
-		my_file_path = "chatHistory/" + self.current_user['name'] + "/" + msg['fname'] + ".txt"
-		friend_file_path = "chatHistory/" + msg['fname'] + "/" + self.current_user['name'] + ".txt"
+		privateChatDir = "chatHistory/people/"
 
 		saved_message = self.current_user['name'] + "#" + msg['msg'] + '\n'
+
+		subdir = privateChatDir + msg['fname']
+
+		if not os.path.exists(subdir):
+			os.makedirs(subdir)
+
+		my_file_path = "chatHistory/people/" + self.current_user['name'] + "/" + msg['fname'] + ".txt"
+		friend_file_path = "chatHistory/people/" + msg['fname'] + "/" + self.current_user['name'] + ".txt"
 
 		with open(my_file_path, "a") as myfile:
 			myfile.write(saved_message)
@@ -400,18 +482,41 @@ class GWSHandler(websocket.WebSocketHandler,BaseHandler):
 			print('=====start')
 			pprint(groups)
 		else:
+			pprint("HELLO WORLD")
 			print('=====msg')
 			pprint(groups)
 			pprint(msg)	
+
+			group_file_path = "chatHistory/groups/" + msg['gid'] + ".txt"
+			pprint(group_file_path)
+			saved_message = msg['sender'] + "#" + msg['msg'] + '\n'
+
+			with open(group_file_path,"a") as groupfile:
+				groupfile.write(saved_message)
+
 			for g in groups:
 				if g['gid'] == msg['gid']:
 					print(msg['gid'])
+					print('hi')
 					#db = self.application.databas
 					for user in g['users_info']:
 						msgsent={'sender':msg['sender'],'msg':msg['msg']}
 						pprint("--------------------------")
 						pprint(msgsent)
 						user.write_message(json.dumps(msgsent))
+
+					# print("lol")
+					# save new message to group chat history
+					# pprint(msg['gid'])
+					# group_file_path = "chatHistory/groups/" + msg['gid'] + ".txt"
+					# pprint("===============")
+					# pprint(group_file_path)
+					# saved_message = msgsent['sender'] + "#" + msgsent['msg'] + '\n'
+
+					# with open(group_file_path, "a") as myfile:
+					# 	myfile.write(saved_message)
+
+
 	def on_close(self):
 		# print("(===========close=============)")
 		pprint(groups)

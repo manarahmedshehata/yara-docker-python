@@ -79,7 +79,7 @@ $(document).ready(function() {
       }
         clearResizeScroll();
       return clearInterval(otvet);
-      }, getRandomInt(2500, 500));
+      }, getRandomInt(250, 50));
     };
   //doc ready
  

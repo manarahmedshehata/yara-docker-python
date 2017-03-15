@@ -12,33 +12,35 @@
          <h2>Your Friends</h2>
 
 
-           <ul class="memberof" id="friendsMember" style="height: 35%">
+           <ul class="memberof" id="friendsMember" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
              {% for i,friend in enumerate(friend_in_list) %}
-              <li>
+              <li style="margin:30px;display: inline-block;" class="button">
                   <!-- <a class ="people" href="/pchat" id={{friend['_id']}}> {{friend['name']}}</a> -->
                    <form action="/pchat" method="post">
                       <input type="hidden" name="fnamee" value={{friend['name']}}>
-                      <button type="submit" />{{friend['name']}}</button>
+                      <button type="submit" style="background-color:#e7e7e7;border:1px solid #e7e7e7;margin-bottom: 3px;">{{friend['name']}}</button>
                    </form>
                    <form action="/blockfriend" method="post">
                       <input type="hidden" name="block" value="friend">
                       <input type="hidden" name="remove" value={{friend['_id']}}>
-                      <button type="submit" />block</button>
+                      <button type="submit"><img width="20" height="20" src="../static/img/block.png" alt=""></button>
                    </form>
            {% end %}
            </li>
            </ul>
 
-         <h2>All People</h2>
-         <ul class="allgroups" id="friendsNotMember">
+         <h2 style="margin-top:5px;">All People</h2>
+         <ul class="allgroups" id="friendsNotMember" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
            {% for i,friendnin in enumerate(friend_nin_list) %}
-            <li>
-                <a class ="groups" id={{friendnin['_id']}}> {{friendnin['name']}}</a></li>
+           <div class="button" style="margin:30px;">
+            <li style="display:inline-block;">
+                <a class ="groups" id={{friendnin['_id']}} style="font-family: sans-serif;"> {{friendnin['name']}}</a></li>
                  <form action="/add" method="post">
                     <input type="hidden" name="add" value="friend">
                     <input type="hidden" name="join" value={{friendnin['_id']}}>
-                    <button type="submit" />add</button>
+                    <button type="submit" /><img width="20" height="20" src="../static/img/addfriend.png" alt=""></button>
                  </form>
+                 </div>
          {% end %}
 
 

@@ -7,32 +7,64 @@
          <div class="top">
             <div class="info">
                <div class="name" style="margin-top: 20px; margin-left: 160px;font-size: 25px;">Leaderboard</div>
-               <!-- pubicfigure_name -->
-               <h1>pubic figure name sorted</h1>
-               {% for pubicfigure_n in pubicfigure_name %}
-                  <p>{{pubicfigure_n}}</p>
-               {% end %}
-               <!-- partymans -->
-               <h1>Party man name sorted</h1>
-               {% for partyman in partymans %}
-                  <p>{{partyman}}</p>
-               {% end %}
-
-               
-               {% if rquests != []%}
-               <div id="messages_div">
-                <h3>msgs if there is any user add me</h3>
-               {% for request in rquests %}
-
-                  <p>{{request}} added you. </p>
-               {% end %}
-               </div>
-               {% end %}
-               
 
             </div>
          </div>
-         <ul class="messages">
+         <table>
+         <tr>
+         <ul class="messages" style="overflow:scroll;columns: 10% 4;padding: 5px;list-style: none;">
+         <li style="display: inline-block;margin-right: 40%">
+               <h2>Best Friend</h2>
+               <ul>
+                  {% for friend in best_friends %}
+                     <li>
+                        {{friend}}
+                     </li>
+                  {% end %}
+               </ul>
+            </li>
+            <li style="display: inline-block;">
+               <h2>Chatty One</h2>
+               <ul>
+                  {% for chatty in chatty_ones %}
+                     <li>
+                        {{chatty}}
+                     </li>
+                  {% end %}
+               </ul>
+            </li><br>
+         <!-- pubicfigure_name -->
+         <li style="display: inline-block;margin-right: 40%">
+               <h2>Public Figure</h2>
+               <ul>
+               {% for pubicfigure_n in pubicfigure_name %}
+                  <li>{{pubicfigure_n}}</li>
+               {% end %}
+               </ul>
+               </li>
+               <!-- partymans -->
+               <li style="display: inline-block;">
+               <h2>Party Man</h2>
+               <ul>
+               {% for partyman in partymans %}
+                  <li>{{partyman}}</li>
+               {% end %}
+               </ul>
+               </li>
+               </ul>
+               
+               {% if rquests != []%}
+               <div id="messages_div">
+                <h3>Offline Notification</h3>
+                <ul style="list-style: none;background: #333;overflow:scroll;columns: 10% 4;">
+                <!-- <li style="background: #cce;margin: 5px;padding-left: 5px;">List Item</li> -->
+               {% for request in rquests %}
+
+                  <li style="background: #cce;margin: 5px;padding-left: 5px;">{{request}} added you. </li>
+               {% end %}
+               </ul>
+               </div>
+               {% end %}
          </ul>
       </div>
    </div>

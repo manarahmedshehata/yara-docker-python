@@ -17,15 +17,16 @@
               <form  action="/blockfriend" method="post">
                       <input type="hidden" name="block" value="group">
                       <input type="hidden" name="remove" value={{gidd}}>
-                      <button type="submit" >leave group</button>
+                      <!-- <button type="submit" >leave group</button> -->
                    </form>
            </i>
 
          </div>
          <ul class="messages">
-         {% for msg in filename %}
-            {% for user in chat_members %}
-               {% if msg[0:msg.index("#")] == username %}
+         {% while file_content %}
+            {% for msg in filename %}
+               {% for user in group_members %}
+                  {% if msg[0:msg.index("#")] == user_name %}
                   <li class="i">
                      <div class="head">
                         <span class="time">10:13 AM, Today</span>
@@ -33,7 +34,7 @@
                      </div>
                      <div class="message"> {{ msg[msg.index("#")+1:] }}</div>
                   </li>
-            {% elif msg[0:msg.index("#")] == user %}
+                  {% elif msg[0:msg.index("#")] == user %}
                <li class="friend">
                   <div class="head">
                      <span class="name" id="nickList">{{ user }}</span>
@@ -41,9 +42,11 @@
                   </div>
                   <div class="message" id="msgList">{{ msg[msg.index("#")+1:] }}</div>
                </li>
+                  {% end %}
                {% end %}
             {% end %}
-        {% end %}
+            {% break %}
+         {% end %}
          </ul>
          <div class="write-form">
             <textarea placeholder="Type your message" name="e" id="text" rows="2" id="txtMsg"></textarea>

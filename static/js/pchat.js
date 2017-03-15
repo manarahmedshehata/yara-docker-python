@@ -42,7 +42,7 @@ $(document).ready(function() {
     var innerText, otvet, friend_name;
     innerText = $.trim($("#text").val());
     friend_name = $('#fr-username').html();
-    
+
     //console.log(m)
     if (innerText !== "") {
       // $(".messages").append("<li class=\"i\"><div class=\"head\"><span class=\"time\">" + (new Date().getHours()) + ":" + (new Date().getMinutes()) + " AM, Today</span><span class=\"name\"> Me</span></div><div class=\"message\">" + innerText + "</div></li>");
@@ -60,13 +60,13 @@ $(document).ready(function() {
         if(friendn != my_name){
           $(".messages").append("<li class=\"i\"><div class=\"head\"><span class=\"time\">" + (new Date().getHours()) + ":" + (new Date().getMinutes()) + " AM, Today</span><span class=\"name\"> Me</span></div><div class=\"message\">" + received_msg + "</div></li>");
         }
-        
+
       else{
         $(".messages").append("<li class=\"friend\"><div class=\"head\"><span class=\"name\">" + $('#fr-username').html() + "</span><span class=\"time\">" + (new Date().getHours()) + ":" + (new Date().getMinutes()) + " AM, Today</span></div><div class=\"message\">" + received_msg + "</div></li>");
       }
         clearResizeScroll();
       return clearInterval(otvet);
-      }, getRandomInt(2500, 500));
+      }, getRandomInt(250, 50));
     };
   //doc ready
     $(".list-pages").niceScroll(conf);
@@ -78,7 +78,7 @@ $(document).ready(function() {
       }
     });
 
-    
+
     $(function(){
       webSocket= new WebSocket("ws://localhost:7070/ws");
       webSocket.onmessage = function(e){
@@ -100,5 +100,5 @@ $(document).ready(function() {
 //   friend_name=$("a[name='friend_name']").attr('id');
 //   console.log("friend_name");
 // });
-//End doc ready 
+//End doc ready
   });
