@@ -18,6 +18,18 @@
                   <p>{{partyman}}</p>
                {% end %}
 
+               
+               {% if rquests != []%}
+               <div id="messages_div">
+                <h3>msgs if there is any user add me</h3>
+               {% for request in rquests %}
+
+                  <p>{{request}} added you. </p>
+               {% end %}
+               </div>
+               {% end %}
+               
+
             </div>
          </div>
          <ul class="messages">

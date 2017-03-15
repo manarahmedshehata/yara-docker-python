@@ -94,9 +94,16 @@ class HomeHandler(BaseHandler):
 		print("++++++++++++++++++++++++++++++++")
 		print(self.current_user)
 		db = self.application.database
+		#GET MSG IF EXIST
+		requests=[]
+		msgs=db.users.find({"_id":ObjectId(self.current_user['user'])},{"msgs":1,"_id":0})
+		for msg in msgs:
+			requests=msg["msgs"]
+
+		# GET PUBLIC FIGURE and PARTY MAN
 		pubicfigure_condition=[{"$project":{"name":1,"_id":0,"count":{"$size":"$friendId"}}},{"$sort":{'count':-1}},{"$limit":5}]
 		partyman_condition=[{"$project":{"name":1,"_id":0,"count":{"$size":"$groups_id"}}},{"$sort":{'count':-1}},{"$limit":5}]
-		# GET PUBLIC FIGURE
+		
 		pubicfigure_name=[]
 		pubicfigure=db.users.aggregate(pubicfigure_condition)
 		for u in pubicfigure:
@@ -110,7 +117,7 @@ class HomeHandler(BaseHandler):
 		pprint(pubicfigure_name)
 		pprint(partymans)
 
-		self.render(templateurl+"home.html", user_name=self.current_user['name'], status=self.current_user['status'], pubicfigure_name=pubicfigure_name, partymans=partymans,  group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+		self.render(templateurl+"home.html", user_name=self.current_user['name'], status=self.current_user['status'], rquests=requests, pubicfigure_name=pubicfigure_name, partymans=partymans,  group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
 #handling signup in db and cookies (registeration and login)
 class SignupHandler(BaseHandler):
@@ -121,7 +128,7 @@ class SignupHandler(BaseHandler):
 		username=self.get_argument("signupname")
 		email=self.get_argument("signupemail")
 		pwd=self.get_argument("signuppwd")
-		new_user = {"name":username,"password":pwd,"email":email,"status":'on','groups_id':[],'friendId':[]}
+		new_user = {"name":username,"password":pwd,"email":email,"status":'on','groups_id':[],'friendId':[],'msgs':[]}
 		try:
 			user_id = db.users.insert(new_user)
 			self.set_secure_cookie("id",str(user_id))
@@ -132,7 +139,7 @@ class SignupHandler(BaseHandler):
 			if not os.path.exists(directory):
 				os.makedirs(directory)
 
-			self.render(templateurl+"home.html", user_name=username, status='on', group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
+			self.redirect("/home")
 		except pymongo.errors.DuplicateKeyError:
 			# error in signup if duplicated name
 			self.redirect("/?sp=1")
@@ -254,6 +261,8 @@ class AddingHandler(BaseHandler):
 		#open connection with database
 		db = self.application.database
 		if fgadd== "friend":
+			
+# db.users.update({"_id":addid},{"$push":{"msg":uid}})
 			add = "friendId"
 		elif fgadd== "group":
 			add = "groups_id"
@@ -263,7 +272,8 @@ class AddingHandler(BaseHandler):
 		print(addid)
 		# 	print("duplicates")
 		db.users.update({"_id":uid},{"$push":{add:addid}})
-		db.users.update({"_id":addid},{"$push":{add:uid}})
+		#add userid at friend list also update user msg field -->another user add u
+		db.users.update({"_id":addid},{"$push":{add:uid,"msgs":self.current_user['name']}})
 
 		if fgadd== "friend":
 			self.redirect("/people")
@@ -448,3 +458,9 @@ class StatusChangeHandler(BaseHandler):
 		self.set_secure_cookie("status", stat)
 		#pprint(update)
 		#pprint(update.modified_count)
+class RmmsgsHandler(BaseHandler):
+	@web.authenticated
+	def get(self):
+		db=self.application.database
+		uid=ObjectId(self.current_user['user'])
+		update=db.users.update({"_id":uid},{"$set":{'msgs':[]}})

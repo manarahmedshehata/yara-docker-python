@@ -9,9 +9,6 @@ $(document).ready(function() {
         url:"/statuschange",
         data:{status:st},
         success: function(res){
-          //console.log()
-          console.log(st)
-          console.log(jQuery.type(st))
           if(st){
             console.log(st) 
             $("#stlamp").addClass('on');
@@ -26,6 +23,16 @@ $(document).ready(function() {
       })
   });
 
+  if($("#messages_div").length!=0){
+    $.ajax({
+        method: 'get',
+        url:"/removemsgs",
+        success: function(res){
+          
+          console.log("status request done");
+        }
+      })
+  }
 
 //End doc ready 
-  });
+});

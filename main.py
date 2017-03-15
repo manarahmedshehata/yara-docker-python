@@ -33,7 +33,9 @@ class Application(web.Application):
 			#create group
 			(r"/creategroup",CreateGroupHandler),
 			(r"/statuschange",StatusChangeHandler),
-			(r"/LogOut",LogoutHandler)
+			(r"/LogOut",LogoutHandler),
+			(r"/removemsgs",RmmsgsHandler)
+
 			]
 
 		settings = dict(
