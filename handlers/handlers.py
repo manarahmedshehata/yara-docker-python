@@ -43,10 +43,7 @@ class PrivateChatHandler(websocket.WebSocketHandler,BaseHandler):
 			f = open(filePath)
 		except OSError as e:
 			f = open(filePath, 'w')
-		"""
-		for msg in f:
-			if if msg[0:msg.index("#")] == username
-		"""
+
 		try:
 			for line in f:
 				count = count + 1
@@ -55,6 +52,8 @@ class PrivateChatHandler(websocket.WebSocketHandler,BaseHandler):
 			history_content = False
 
 		f.seek(0);
+
+		pprint(f)
 
 		self.render(templateurl+"privatechat.html",user_name=self.current_user['name'], status=self.current_user['status'], file_content=history_content, id_last_index=0, filename=f, username="1", friend_name=fname, posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 

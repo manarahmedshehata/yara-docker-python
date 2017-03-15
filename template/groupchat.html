@@ -25,7 +25,6 @@
          <ul class="messages">
          {% while file_content %}
             {% for msg in filename %}
-               {% for user in group_members %}
                   {% if msg[0:msg.index("#")] == user_name %}
                   <li class="i">
                      <div class="head">
@@ -34,7 +33,9 @@
                      </div>
                      <div class="message"> {{ msg[msg.index("#")+1:] }}</div>
                   </li>
-                  {% elif msg[0:msg.index("#")] == user %}
+                  {% else %}
+                  {% for user in group_members %}
+                  {% if msg[0:msg.index("#")] == user %}
                <li class="friend">
                   <div class="head">
                      <span class="name" id="nickList">{{ user }}</span>
@@ -43,6 +44,7 @@
                   <div class="message" id="msgList">{{ msg[msg.index("#")+1:] }}</div>
                </li>
                   {% end %}
+               {% end %}
                {% end %}
             {% end %}
             {% break %}
