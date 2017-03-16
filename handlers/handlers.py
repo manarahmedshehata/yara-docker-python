@@ -394,7 +394,7 @@ class GWSHandler(websocket.WebSocketHandler,BaseHandler):
 		# print(self.current_user)
 		if self.current_user:
 		 	print('gws')
-)
+
 	def on_message(self,message):
 		print("----------------ONMSG--------------")
 		msg=json.loads(message)
