@@ -4,7 +4,6 @@ from pymongo import MongoClient
 from pprint import pprint
 from tornado.options import define, options
 from bson.code import Code
-#################################
 import os
 import uuid
 import json
@@ -25,9 +24,6 @@ class Application(web.Application):
 			(r"/home",HomeHandler),
 			(r"/groups",GroupsHandler),
 			(r"/people",PeopleHandler),
-			# (r"/chatbot",ChatBotHandler)
-			#editing people friend requist
-			#(r"/addfriend",AddFriendHandler),
 			(r"/add",AddingHandler),
 			(r"/blockfriend",BlockHandler),
 			#create group
@@ -73,7 +69,7 @@ class MainHandler(BaseHandler):
 		find_cond={"$and":[{'name':username},{'password':pwd}]}
 		users = db["users"].find(find_cond)
 		if users.count() == 0:
-			#rereender to error page or ajax call "Wrong username or pwd"
+
 			self.cls2 = "active"
 			self.cls1 = ""
 			self.signup_disp = "display:none;"
@@ -87,7 +83,7 @@ class MainHandler(BaseHandler):
 				self.set_secure_cookie("id",str(c['_id']))
 				self.set_secure_cookie("name", c['name'])
 				self.set_secure_cookie("status", c['status'])
-				#self.set_secure_cookie("status", 'on')
+				
 			self.redirect("/home")
 
 """
