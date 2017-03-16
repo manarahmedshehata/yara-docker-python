@@ -1,10 +1,26 @@
-# chat-game
-simple chat app using python, tornado and mongodb
+# Chat Game
+## Description
+A simple chat app using python, tornado and mongodb
 
-run ""pip install pymongo""
+## Team Members
+1. Sara Taha
+2. Manar Ahmed
+3. Elsayed Atef
 
-run python3 main.py
+## Instructions
 
-open any web browser and connect to http://localhost:7070
+1. Install pymongo
+```
+pip install pymongo
+```
+2. Restore the Chat database
+```
+mongorestore --db Chat path_to_Chat_folder
+```
+3. Start the server
 
-make new friends and have fun !!
+```
+python3 main.py
+```
+4. open any web browser and connect to http://localhost:7070
+5. Make new friends and have fun!
