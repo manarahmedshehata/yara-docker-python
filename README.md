@@ -1,11 +1,13 @@
 # Chat Game
 ## Description
-A simple chat app using python, tornado and mongodb
+A simple chat app using python, tornado and mongodb. Python Course, ITI.
 
 ## Team Members
-1. Sara Taha
-2. Manar Ahmed
-3. Elsayed Atef
+| Team Member        | Task           |
+| ------------- |:-------------:|
+| Sara Taha      | UI Design, Chat History and Leaderboard |
+| Manar Ahmed     | Authentication, Chat and Database Functionality      |
+| Elsayed Atef | List groups and friends and Leaderboard      |
 
 ## Instructions
 
