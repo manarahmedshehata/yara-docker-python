@@ -22,5 +22,5 @@ mongorestore --db Chat path_to_Chat_folder
 ```
 python3 main.py
 ```
-4. open any web browser and connect to http://localhost:7070
+4. Open any web browser and connect to http://localhost:7070
 5. Make new friends and have fun!
