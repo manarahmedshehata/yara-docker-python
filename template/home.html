@@ -33,7 +33,6 @@
                   {% end %}
                </ul>
             </li><br>
-         <!-- pubicfigure_name -->
          <li style="display: inline-block;margin-right: 40%">
                <h2>Public Figure</h2>
                <ul>
@@ -42,7 +41,6 @@
                {% end %}
                </ul>
                </li>
-               <!-- partymans -->
                <li style="display: inline-block;">
                <h2>Party Man</h2>
                <ul>
@@ -52,13 +50,12 @@
                </ul>
                </li>
                </ul>
-               
+
                {% if rquests != []%}
                <div id="messages_div">
 
                 <h3>Offline Notification</h3>
                 <ul style="list-style: none;background: #333;overflow:scroll;columns: 10% 4;">
-                <!-- <li style="background: #cce;margin: 5px;padding-left: 5px;">List Item</li> -->
                {% for request in rquests %}
                   <li style="background: #cce;margin: 5px;padding-left: 5px;">{{request}} added you. </li
                {% end %}
