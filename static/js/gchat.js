@@ -1,6 +1,6 @@
   var webSocket,my_name,groupid;
 $(document).ready(function() {
-    
+
     var my_name = $("#stlamp").text()
     var groupid = $('#Group').val();
     console.log("user_name",my_name,"gid",groupid)
@@ -10,7 +10,7 @@ $(document).ready(function() {
       msg=JSON.stringify(message)
       console.log(msg)
       webSocket.send(msg)
-    
+
     };
   webSocket= new WebSocket("ws://localhost:7070/gws");
   webSocket.onopen = function (event) {
@@ -22,7 +22,7 @@ $(document).ready(function() {
             var data=JSON.parse(e.data)
             receiveI(data['sender'],data['msg'])
     }
-  
+
   var clearResizeScroll, conf, getRandomInt, insertI, lol;
 
   conf = {
@@ -49,15 +49,14 @@ $(document).ready(function() {
 
 
    insertI = function() {
-  //  Startgroup();
+
 
     var innerText, otvet, friend_name;
     innerText = $.trim($("#text").val());
 
-    //console.log(m)
+
     if (innerText !== "") {
-      // $(".messages").append("<li class=\"i\"><div class=\"head\"><span class=\"time\">" + (new Date().getHours()) + ":" + (new Date().getMinutes()) + " AM, Today</span><span class=\"name\"> Me</span></div><div class=\"message\">" + innerText + "</div></li>");
-      // clearResizeScroll();
+
       var message ={'msg':innerText,'gid':groupid,'sender':my_name}
       msg=JSON.stringify(message)
       console.log(msg)
@@ -73,7 +72,7 @@ $(document).ready(function() {
         if(sender == my_name){
           $(".messages").append("<li class=\"i\"><div class=\"head\"><span class=\"time\">" + (new Date().getHours()) + ":" + (new Date().getMinutes()) + " AM, Today</span><span class=\"name\"> Me</span></div><div class=\"message\">" + received_msg + "</div></li>");
         }
-        
+
       else{
         $(".messages").append("<li class=\"friend\"><div class=\"head\"><span class=\"name\">" + sender + "</span><span class=\"time\">" + (new Date().getHours()) + ":" + (new Date().getMinutes()) + " AM, Today</span></div><div class=\"message\">" + received_msg + "</div></li>");
       }
@@ -82,7 +81,7 @@ $(document).ready(function() {
       }, getRandomInt(250, 50));
     };
   //doc ready
- 
+
     $(".list-pages").niceScroll(conf);
     $(".messages").niceScroll(lol);
     $("#text").keypress(function(e) {
@@ -95,15 +94,8 @@ $(document).ready(function() {
 
 
     $(".send").click(function() {
-      //friend_name=$("div[id='fr-username']").text();
 
-      //console.log(friend_name);
       return insertI();
     });
-//   $("a[name=friend_name]").click(function(){
-//   // todo make frind name appear in chat room
-//   friend_name=$("a[name='friend_name']").attr('id');
-//   console.log("friend_name");
-// });
-//End doc ready 
+ 
   });
