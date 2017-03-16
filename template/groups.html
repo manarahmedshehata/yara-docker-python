@@ -5,7 +5,7 @@
       <div class="chat">
          <div class="top">
             <div class="info">
-               <div class="name" style="margin-left: 160px;font-size: 40px; text-decoration: underline;">Groups</br>
+               <div class="name" style="margin-top: 20px; margin-left: 210px;font-size: 25px;color:#4c4a37; font-family: 'Trocchi', serif; font-size: 45px; font-weight: normal; line-height: 48px;">Groups</br>
 
                </div>
              </br>
@@ -14,7 +14,7 @@
          </div>
          <div>
          </br>
-         <h2>Groups you're member of</h2>
+         <h2 style="padding-right: 15px; font-family: 'Droid serif', serif; font-size: 20px; font-weight: 400; font-style: italic; line-height: 44px;margin-left: 5px;">Groups you're member of</h2>
          <ul class="memberof" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
          {% for i,group in enumerate(groups_list) %}
 
@@ -36,7 +36,7 @@
            {% end %}
            </li>
          </ul>
-         <h2>All Groups</h2>
+         <h2 style="padding-right: 15px; font-family: 'Droid serif', serif; font-size: 20px; font-weight: 400; font-style: italic; line-height: 44px;margin-left: 5px;">All Groups</h2>
          <ul class="allgroups" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
             {% for i,groupnin in enumerate(nin_grouplist) %}
               <li style="margin:30px;display: inline-block;" class="button">

@@ -6,10 +6,10 @@
       <div class="chat">
          <div class="top">
             <div class="info">
-               <div class="name" style="margin-left: 160px;font-size: 50px; text-decoration: underline;">People</div>
+               <div class="name" style="margin-top: 20px; margin-left: 230px;font-size: 25px;color:#4c4a37; font-family: 'Trocchi', serif; font-size: 45px; font-weight: normal; line-height: 48px;">People</div>
             </div>
          </div>
-         <h2>Your Friends</h2>
+         <h2 style="padding-right: 15px; font-family: 'Droid serif', serif; font-size: 20px; font-weight: 400; font-style: italic; line-height: 44px;margin-left: 5px;">Your Friends</h2>
 
 
            <ul class="memberof" id="friendsMember" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
@@ -29,7 +29,7 @@
            </li>
            </ul>
 
-         <h2 style="margin-top:5px;">All People</h2>
+         <h2 style="padding-right: 15px; font-family: 'Droid serif', serif; font-size: 20px; font-weight: 400; font-style: italic; line-height: 44px;margin-left: 5px;">All People</h2>
          <ul class="allgroups" id="friendsNotMember" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
            {% for i,friendnin in enumerate(friend_nin_list) %}
            <div class="button" style="margin:30px;">

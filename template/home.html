@@ -6,52 +6,50 @@
       <div class="chat">
          <div class="top">
             <div class="info">
-               <div class="name" style="margin-top: 20px; margin-left: 160px;font-size: 25px;">Leaderboard</div>
+               <div class="name" style="margin-top: 20px; margin-left: 160px;font-size: 25px;color:#4c4a37; font-family: 'Trocchi', serif; font-size: 45px; font-weight: normal; line-height: 48px;">Leaderboard</div>
 
             </div>
          </div>
-         <table>
-         <tr>
-         <ul class="messages" style="overflow:scroll;columns: 10% 4;padding: 5px;list-style: none;">
-         <li style="display: inline-block;margin-right: 40%">
-               <h2>Best Friend</h2>
-               <ul>
+         <!-- <table> -->
+         <!-- <tr> -->
+         <table class="messages" style="margin-left: 4%;text-align: center; font-weight: bold;">
+               <tr><th style="padding-right: 15px; font-family: 'Droid serif', serif; font-size: 20px; font-weight: 400; font-style: italic; line-height: 44px; margin: 0 0 12px; text-align: center;"><h4>Best Friend</h4></th>
+               <th style="padding-right: 15px; font-family: 'Droid serif', serif; font-size: 20px; font-weight: 400; font-style: italic; line-height: 44px; margin: 0 0 12px; text-align: center;"><h4>Chatty One</h4></th>
+               <th style="padding-right: 15px; font-family: 'Droid serif', serif; font-size: 20px; font-weight: 400; font-style: italic; line-height: 44px; margin: 0 0 12px; text-align: center;"><h4>Public Figure</h4></th>
+               <th style="padding-right: 15px; font-family: 'Droid serif', serif; font-size: 20px; font-weight: 400; font-style: italic; line-height: 44px; margin: 0 0 12px; text-align: center;"><h4>Party Man</h4></th>
+               </tr>
+               <tr><td><ul style="list-style: none;">
                   {% for friend in best_friends %}
                      <li>
                         {{friend}}
                      </li>
                   {% end %}
-               </ul>
-            </li>
-            <li style="display: inline-block;">
-               <h2>Chatty One</h2>
-               <ul>
+               </ul></td>
+               <td>
+                  <ul style="list-style: none;">
                   {% for chatty in chatty_ones %}
                      <li>
                         {{chatty}}
                      </li>
                   {% end %}
                </ul>
-            </li><br>
-         <!-- pubicfigure_name -->
-         <li style="display: inline-block;margin-right: 40%">
-               <h2>Public Figure</h2>
-               <ul>
+               </td>
+               <td>
+                  <ul style="list-style: none;">
                {% for pubicfigure_n in pubicfigure_name %}
                   <li>{{pubicfigure_n}}</li>
                {% end %}
                </ul>
-               </li>
-               <!-- partymans -->
-               <li style="display: inline-block;">
-               <h2>Party Man</h2>
-               <ul>
+               </td>
+               <td>
+                  <ul style="list-style: none;">
                {% for partyman in partymans %}
                   <li>{{partyman}}</li>
                {% end %}
                </ul>
-               </li>
-               </ul>
+               </td>
+               </tr>
+               </table>
                
                {% if rquests != []%}
                <div id="messages_div">
