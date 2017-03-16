@@ -18,8 +18,7 @@
          <ul class="memberof" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
          {% for i,group in enumerate(groups_list) %}
 
-          <li style="margin:30px;display: inline-block;" class="button"> 
-            <!-- <a name ="groupchatlink" href="/gchat" id={{group['_id'] }}> {{group['name'] }}</a>  -->
+          <li style="margin:30px;display: inline-block;" class="button">
                     <form  name = "groom" action="/gchat" method="post">
                       <input type="hidden" name="gid" value={{group['_id'] }} style="background-color: white;">
                       <input type="hidden" name="gname" value={{group['name'] }} style="display:inline-block;">
@@ -40,7 +39,6 @@
          <ul class="allgroups" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
             {% for i,groupnin in enumerate(nin_grouplist) %}
               <li style="margin:30px;display: inline-block;" class="button">
-                  <!-- <a class ="groups" href="/gchat" id={{groupnin["_id"] }}> {{groupnin['name'] }}</a> -->
                   <p style="font-family: sans-serif;">{{groupnin['name'] }}</p>
                     <form action="/add" method="post">
                     <input type="hidden" name="add" value="group">
@@ -56,5 +54,5 @@
 
       </div>
    </div>
-  
+
 {% end %}
