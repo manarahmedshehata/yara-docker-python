@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 {% extends base.html %}
    {% block title %} Chat Game | Groups {% end %}
-{% block content %} 
+{% block content %}
 <input type="hidden" id="Group" value={{gidd}}>
       <div class="chat">
          <div class="top">
             <div class="avatar">
-               <!--<img width="50" height="50" src="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg">-->
                <img width="50" height="50" src="{{ group_avatar }}">
             </div>
             <div class="info">
@@ -17,7 +16,6 @@
               <form  action="/blockfriend" method="post">
                       <input type="hidden" name="block" value="group">
                       <input type="hidden" name="remove" value={{gidd}}>
-                      <!-- <button type="submit" >leave group</button> -->
                    </form>
            </i>
 
@@ -69,12 +67,11 @@
             </li>
 
          {% end %}
-            
+
          </menu>
       </div>
-   <!-- </div> -->
    {% end %}
-{% block script %} 
+{% block script %}
 
    <script src="../static/js/gchat.js"></script>
 {% end %}

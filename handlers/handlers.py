@@ -71,7 +71,7 @@ class GroupChatHandler(websocket.WebSocketHandler,BaseHandler):
 		try:
 			filePath = "chatHistory/groups/" + gid + ".txt"
 			f = open(filePath)
-		
+
 		except OSError as e:
 			f = open(filePath, 'w+')
 
@@ -86,7 +86,7 @@ class GroupChatHandler(websocket.WebSocketHandler,BaseHandler):
 
 		f.seek(0);
 
-		# pprint(history_content)
+
 
 		#get groups user with name, id and status
 		db = self.application.database
@@ -117,7 +117,7 @@ class HomeHandler(BaseHandler):
 		# GET PUBLIC FIGURE and PARTY MAN
 		pubicfigure_condition=[{"$project":{"name":1,"_id":0,"count":{"$size":"$friendId"}}},{"$sort":{'count':-1}},{"$limit":5}]
 		partyman_condition=[{"$project":{"name":1,"_id":0,"count":{"$size":"$groups_id"}}},{"$sort":{'count':-1}},{"$limit":5}]
-		
+
 		pubicfigure_name=[]
 		pubicfigure=db.users.aggregate(pubicfigure_condition)
 		for u in pubicfigure:
@@ -141,10 +141,10 @@ class HomeHandler(BaseHandler):
 
 		# Best Friend List
 		friends_dict = {}
-		# bfriend = []
+
 
 		for filename in os.listdir(currentUserDir):
-			# pprint(filename)
+
 			pprint("inside for")
 			fname = currentUserDir + filename
 			with open(fname) as f:
@@ -152,7 +152,7 @@ class HomeHandler(BaseHandler):
 
 		pprint(friends_dict)
 		bfriend = sorted(friends_dict, key=friends_dict.get, reverse=True)
-			# best_friend.append(key)
+
 
 		pprint("lol")
 		pprint(bfriend)
@@ -163,15 +163,15 @@ class HomeHandler(BaseHandler):
 
 		subdirs = [x[0] for x in os.walk(privateChatDir)]
 		for subdir in subdirs:
-			# pprint(subdir)
+
 			chatty_dict[subdir] = 0
 			files = os.walk(subdir).__next__()[2]
 
 			if (len(files) > 0):
-				for file in files: 
-					chatty_dict[subdir] += 1                                                                                      
+				for file in files:
+					chatty_dict[subdir] += 1
 
-		# pprint(chatty_dict)
+
 
 		chatty_list = sorted(chatty_dict, key=chatty_dict.get, reverse=True)
 
@@ -181,7 +181,7 @@ class HomeHandler(BaseHandler):
 			chatty_list[x] = chatty_list[x].replace(privateChatDir,"")
 			x += 1
 
-		# pprint(chatty_list)
+
 
 		length = len(chatty_list) - 2
 		chatty_list = chatty_list[:length]
@@ -190,7 +190,7 @@ class HomeHandler(BaseHandler):
 
 #handling signup in db and cookies (registeration and login)
 class SignupHandler(BaseHandler):
-	#@web.authenticated
+
 	def post(self):
 		#insert user info
 		db = self.application.database
@@ -223,7 +223,7 @@ class GroupsHandler(BaseHandler):
 		db = self.application.database
 		user_id =ObjectId(self.current_user['user'])
 
-		#pprint(type(user_id))
+
 		groups=db.users.find({'_id':user_id},{'groups_id':1,'_id':0})
 		for g in groups:
 			for group in g["groups_id"]:
@@ -239,7 +239,6 @@ class GroupsHandler(BaseHandler):
 				groupslist_notin.append(nin)
 		pprint(owner)
 
-		# db.users.find({name:userName}).forEach(function(user){ db.groups.find({user:user._id}).forEach(function(group) { print(group.name) }) })
 
 		self.render(templateurl+"groups.html", user_name=self.current_user['name'], status=self.current_user['status'], groups_list=groupslist_in,nin_grouplist=groupslist_notin, owner=owner, posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 
@@ -252,7 +251,6 @@ class PeopleHandler(BaseHandler):
 		friends_list_notin=[]
 		db = self.application.database
 		user_id =self.current_user['name']
-		#pprint(type(user_id))
 		friends=db.users.find({'name':user_id},{'friendId':1,'_id':0})
 		for f in friends:
 			for friend in f["friendId"]:
@@ -277,54 +275,16 @@ class CreateGroupHandler(BaseHandler):
 		owner=ObjectId(self.current_user['user'])
 		group_id = db.groups.insert({'name':groupname,'owner':owner})
 		db.users.update({"_id":owner},{"$push":{'groups_id':group_id}})
-		
+
 		filePath = "chatHistory/groups/" + str(group_id) + ".txt"
 		f = open(filePath, 'w+')
 
 		self.redirect("/groups")
 
 
-# class ChatBotHandler(BaseHandler):
-# 	@web.authenticated
-# 	def get(self):
-# 		f = open("template/test.txt")
 
-# 		count = 0
-
-# 		for line in f:
-# 		  count = count + 1
-
-# 		f.seek(0)
-
-# 		self.render(templateurl+"chatbot.html",user_name=self.current_user['name'], status=self.current_user['status'], id_last_index=0, filename=f, username="1", friend_name="2", posts_no=count,user_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
 		self.render(templateurl+"people.html", user_name=self.current_user['name'], status=self.current_user['status'], group_name="Eqraa", posts_no="2000",group_avatar="http://cs625730.vk.me/v625730358/1126a/qEjM1AnybRA.jpg")
-"""
-#class to add friend
-class AddFriendHandler(BaseHandler):
-	@web.authenticated
-	def get(self):
-		userId = ObjectId(self.current_user['user'])
-		# str(self.get_secure_cookie("id"),'utf-8')
-		#print(userId)
-		#open connection with database
-		db = self.application.database
-		# iterate in users to find matched one
-		userss=db.users.find({"_id":ObjectId(userId)})
-		for users in userss:
-			print(users)
-		#static adding friend in dbs using id of another one then trying to do it auto
-		#adding only id of friends
-		reqId= ObjectId("58b5b1845f4a5505a3c40c57")
-		# if reqId not in db.users.find({'_id':ObjectId(userId)},{friendId:1,_id:0}).forEach(function(frind){test=db.users.find({_id:{$in:frind.friendId}})}):
-		# 	print("duplicates")
-		# else:
-		db.users.update({"_id":ObjectId(userId)},{"$push":{"friendId":reqId}})
 
-		# x []= Code(db.users.find({'_id':ObjectId(userId)},{"friendId":1,"_id":0}).forEach(function(frind){test=db.users.find({reqId:{'$in':'frind.friendId'}}).forEach(function(u){print(u.name)})}))
-		#	print(x)
-		# but the above code will allow dublicated
-		#we need to verify if it's exist before or not may be try to remove it if it's exist before
-"""
 class AddingHandler(BaseHandler):
 	@web.authenticated
 	def post(self):
@@ -334,8 +294,7 @@ class AddingHandler(BaseHandler):
 		#open connection with database
 		db = self.application.database
 		if fgadd== "friend":
-			
-# db.users.update({"_id":addid},{"$push":{"msg":uid}})
+
 			add = "friendId"
 		elif fgadd== "group":
 			add = "groups_id"
@@ -356,14 +315,11 @@ class AddingHandler(BaseHandler):
 class BlockHandler(BaseHandler):
 	@web.authenticated
 	def post(self):
-		#__TODO__ handel fun return
-		#fgblock string string refering to block friend or Group
+
 		fgblock=self.get_argument("block")
 		removeid=ObjectId(self.get_argument("remove"))
 		db = self.application.database
-		#__TODO__ get removeid from interface
-		#removeid=ObjectId("58b5ca548d46858f7030f216")#user
-		#removeid=ObjectId("58b5c9b68d46858f7030f215")#group
+
 		uid=ObjectId(self.current_user['user'])
 		print(fgblock)
 		print(removeid)
@@ -371,7 +327,6 @@ class BlockHandler(BaseHandler):
 			block = "friendId"
 		elif fgblock== "group":
 			block = "groups_id"
-		#__TODO__Exceptions handling
 		update=db.users.update_one({"_id":uid},{"$pull":{block:removeid}})
 		update=db.users.update_one({"_id":removeid},{"$pull":{block:uid}})
 		if fgblock== "friend":
@@ -380,27 +335,14 @@ class BlockHandler(BaseHandler):
 			self.redirect("/groups")
 
 		pprint(update.modified_count)
-#########################################################################################3
-"""
-#creating handler for create group
-# don't work
-class CreateGroupHandler(BaseHandler):
-	@web.authenticated
-	def get(self):
-		userId = str(self.get_secure_cookie("id"),'utf-8')
-		groupNameCreate=self.get_argument("gx")
-		print(gx)
-		#db = self.application.database
-"""
+
+
 
 #handling websocket
 clients = []
 class WSHandler(websocket.WebSocketHandler,BaseHandler):
-	# pprint(clients)
-	# print("ws")
-	#@web.authenticated
+
 	def open(self):
-		# print(self.current_user)
 		if self.current_user:
 			print("ws")
 			client={'id':self.current_user['user'],'info':self,'name':self.current_user['name']}
@@ -430,8 +372,7 @@ class WSHandler(websocket.WebSocketHandler,BaseHandler):
 
 		with open(friend_file_path, "a") as friendfile:
 			friendfile.write(saved_message)
-		
-		#db = self.application.databas
+
 		for c in clients:
 				if c['name'] in [msg['fname'],msg['myname']]:
 					msgsent={'name':msg['fname'],'msg':msg['msg']}
@@ -453,16 +394,14 @@ class GWSHandler(websocket.WebSocketHandler,BaseHandler):
 		# print(self.current_user)
 		if self.current_user:
 		 	print('gws')
-		# 	group={'gid':'1','users_info':[self],'user_name':self.current_user['name']}
-		# 	groups.append(group)
-		# pprint(groups)
+
 	def on_message(self,message):
 		print("----------------ONMSG--------------")
 		msg=json.loads(message)
 		pprint(msg)
 		if not "msg" in msg:
 			# Start group msg
-			# __TODO add user to group id 
+			# __TODO add user to group id
 			if groups ==[]:
 				group={'gid':msg['gid'],'users_info':[self]}
 				groups.append(group)
@@ -484,7 +423,7 @@ class GWSHandler(websocket.WebSocketHandler,BaseHandler):
 			pprint("HELLO WORLD")
 			print('=====msg')
 			pprint(groups)
-			pprint(msg)	
+			pprint(msg)
 
 			group_file_path = "chatHistory/groups/" + msg['gid'] + ".txt"
 			pprint(group_file_path)
@@ -504,16 +443,7 @@ class GWSHandler(websocket.WebSocketHandler,BaseHandler):
 						pprint(msgsent)
 						user.write_message(json.dumps(msgsent))
 
-					# print("lol")
-					# save new message to group chat history
-					# pprint(msg['gid'])
-					# group_file_path = "chatHistory/groups/" + msg['gid'] + ".txt"
-					# pprint("===============")
-					# pprint(group_file_path)
-					# saved_message = msgsent['sender'] + "#" + msgsent['msg'] + '\n'
 
-					# with open(group_file_path, "a") as myfile:
-					# 	myfile.write(saved_message)
 
 
 	def on_close(self):
@@ -560,8 +490,7 @@ class StatusChangeHandler(BaseHandler):
 		update=db.users.update({"_id":uid},{"$set":{'status':stat}})
 
 		self.set_secure_cookie("status", stat)
-		#pprint(update)
-		#pprint(update.modified_count)
+
 class RmmsgsHandler(BaseHandler):
 	@web.authenticated
 	def get(self):

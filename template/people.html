@@ -15,7 +15,6 @@
            <ul class="memberof" id="friendsMember" style="overflow:scroll;columns: 10% 3;height:35%;padding: 5px;list-style: none;">
              {% for i,friend in enumerate(friend_in_list) %}
               <li style="margin:30px;display: inline-block;" class="button">
-                  <!-- <a class ="people" href="/pchat" id={{friend['_id']}}> {{friend['name']}}</a> -->
                    <form action="/pchat" method="post">
                       <input type="hidden" name="fnamee" value={{friend['name']}}>
                       <button type="submit" style="background-color:#e7e7e7;border:1px solid #e7e7e7;margin-bottom: 3px;">{{friend['name']}}</button>
