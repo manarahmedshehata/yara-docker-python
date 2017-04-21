@@ -43,7 +43,7 @@ class Application(web.Application):
 			login_url="/",
 		)
 		web.Application.__init__(self, handlers, **settings)
-		self.con = MongoClient('localhost', 27017)
+		self.con = MongoClient('mongo', 27017)
 		print(self.con)
 		self.database = self.con["Chat"]
 
